@@ -5,8 +5,7 @@
 #include <iostream>
 using namespace std;
 
-
-uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r, short i){
+uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   int8_t j, k;
   int13_t correctedADC = 0;
   uint12_t uncorrectedADC = 0;
@@ -53,13 +52,12 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r, short i){
   acc = acc + mul;
   for (j = 3; j >= 0; j--){
 #pragma HLS UNROLL
-#pragma HLS dependence variable=r.shift_reg inter false
     pro = r.shift_reg[j]*weight[j];
     mul = pro >> shiftfilter;
     acc = acc + mul;
   }
   filterOutput = acc;
-  if (filterOutput < 0) filterOutput = 0;
+  //if (filterOutput < 0) filterOutput = 0;
   if (filterOutput > 0X3FFFF) filterOutput = 0X3FFFF;
 
   // Peak Finder
@@ -71,14 +69,10 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r, short i){
 	}
 	tmpPeak = ampPeak >> 2;
 	if (tmpPeak > 0X3FF){
-          tmpPeak = 0X3FF;
-        }
+		tmpPeak = 0X3FF;
+    }
   }
-  for (k = 1; k > 0; k--){
-#pragma HLS UNROLL
-#pragma HLS dependence variable=r.peak_reg inter false
-    r.peak_reg[k] = r.peak_reg[k-1];
-  }
+  r.peak_reg[k] = r.peak_reg[k-1];
   r.peak_reg[0] = filterOutput;
   return tmpPeak;
 }

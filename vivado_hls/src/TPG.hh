@@ -3,7 +3,7 @@
 
 #define NXtl 1 //Also tested with 300 crystals
 #define NEvents 570 //This is only for testing on the test bench
-//#define Vivado 1 //Uncomment for synthesis
+#define Vivado 1 //Uncomment for synthesis
 
 #include <stdint.h>
 #ifdef Vivado
@@ -46,11 +46,11 @@
 
 struct registers {
   uint18_t shift_reg[4]; //4-stage Shift Register for Amplitude Filter
-  uint18_t peak_reg[2]; //2-stage Shift Register for Peak Finder
+  int19_t peak_reg[2]; //2-stage Shift Register for Peak Finder
 };
 
 //void TPG(inPut in[NXtl], outPut out[NXtl]);
 
-uint16_t TPG(uint14_t data_input, uint24_t lincoeff, registers &r, short i);
+uint16_t TPG(uint14_t data_input, uint24_t lincoeff, registers &r);
 
 #endif

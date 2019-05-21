@@ -1,0 +1,163 @@
+
+
+================================================================
+== Vivado HLS Report for 'TPG'
+================================================================
+* Date:           Tue May 21 19:06:16 2019
+
+* Version:        2016.4 (Build 1733598 on Wed Dec 14 22:59:20 MST 2016)
+* Project:        BCP
+* Solution:       solution1
+* Product family: virtex7
+* Target device:  xc7vx690tffg1927-2
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing (ns): 
+    * Summary: 
+    +--------+-------+----------+------------+
+    |  Clock | Target| Estimated| Uncertainty|
+    +--------+-------+----------+------------+
+    |ap_clk  |   8.33|      6.89|        1.04|
+    +--------+-------+----------+------------+
+
++ Latency (clock cycles): 
+    * Summary: 
+    +-----+-----+-----+-----+----------+
+    |  Latency  |  Interval | Pipeline |
+    | min | max | min | max |   Type   |
+    +-----+-----+-----+-----+----------+
+    |    2|    2|    1|    1| function |
+    +-----+-----+-----+-----+----------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-------+--------+--------+
+|       Name      | BRAM_18K| DSP48E|   FF   |   LUT  |
++-----------------+---------+-------+--------+--------+
+|DSP              |        -|      2|       -|       -|
+|Expression       |        -|      -|       0|     185|
+|FIFO             |        -|      -|       -|       -|
+|Instance         |        -|      -|       -|       -|
+|Memory           |        -|      -|       -|       -|
+|Multiplexer      |        -|      -|       -|       -|
+|Register         |        -|      -|     135|       -|
++-----------------+---------+-------+--------+--------+
+|Total            |        0|      2|     135|     185|
++-----------------+---------+-------+--------+--------+
+|Available        |     2940|   3600|  866400|  433200|
++-----------------+---------+-------+--------+--------+
+|Utilization (%)  |        0|   ~0  |   ~0   |   ~0   |
++-----------------+---------+-------+--------+--------+
+
++ Detail: 
+    * Instance: 
+    N/A
+
+    * DSP48: 
+    +-------------------------+----------------------+----------------+
+    |         Instance        |        Module        |   Expression   |
+    +-------------------------+----------------------+----------------+
+    |algo_unpacked_am_bkb_U1  |algo_unpacked_am_bkb  | i0 * (i1 + i2) |
+    |algo_unpacked_mulcud_U2  |algo_unpacked_mulcud  |     i0 * i1    |
+    +-------------------------+----------------------+----------------+
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +-------------------------------+----------+-------+---+----+------------+------------+
+    |         Variable Name         | Operation| DSP48E| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +-------------------------------+----------+-------+---+----+------------+------------+
+    |r_0_peak_reg_V_writ_fu_388_p2  |     +    |      0|  0|   9|          19|          19|
+    |tmp3_fu_371_p2                 |     +    |      0|  0|   9|          19|          19|
+    |tmp4_fu_383_p2                 |     +    |      0|  0|   9|          19|          19|
+    |tmp5_fu_377_p2                 |     +    |      0|  0|   9|          19|          19|
+    |p_neg_fu_234_p2                |     -    |      0|  0|  24|           1|          24|
+    |r_V_2_fu_259_p2                |     -    |      0|  0|  25|          25|          25|
+    |r_V_4_2_fu_301_p2              |     -    |      0|  0|  24|          24|          24|
+    |r_V_4_3_fu_351_p2              |     -    |      0|  0|  24|          24|          24|
+    |or_cond_fu_403_p2              |    and   |      0|  0|   1|           1|           1|
+    |icmp_fu_210_p2                 |   icmp   |      0|  0|   3|           7|           1|
+    |tmp_1_fu_394_p2                |   icmp   |      0|  0|   7|          19|          19|
+    |tmp_2_fu_398_p2                |   icmp   |      0|  0|   7|          19|           1|
+    |agg_result_V_1_fu_425_p3       |  select  |      0|  0|  16|           1|          16|
+    |tmpPeak_V_fu_418_p3            |  select  |      0|  0|  16|           1|          10|
+    +-------------------------------+----------+-------+---+----+------------+------------+
+    |Total                          |          |      0|  0| 185|         198|         221|
+    +-------------------------------+----------+-------+---+----+------------+------------+
+
+    * Multiplexer: 
+    N/A
+
+    * Register: 
+    +---------------------------------------------------------+----+----+-----+-----------+
+    |                           Name                          | FF | LUT| Bits| Const Bits|
+    +---------------------------------------------------------+----+----+-----+-----------+
+    |ap_CS_fsm                                                |   1|   0|    1|          0|
+    |ap_enable_reg_pp0_iter1                                  |   1|   0|    1|          0|
+    |ap_enable_reg_pp0_iter2                                  |   1|   0|    1|          0|
+    |ap_pipeline_reg_pp0_iter1_icmp_reg_495                   |   1|   0|    1|          0|
+    |ap_pipeline_reg_pp0_iter1_r_0_peak_reg_V_read_1_reg_460  |  19|   0|   19|          0|
+    |icmp_reg_495                                             |   1|   0|    1|          0|
+    |mul_V_reg_485                                            |  19|   0|   19|          0|
+    |r_0_peak_reg_V_read_1_reg_460                            |  19|   0|   19|          0|
+    |r_0_peak_reg_V_writ_reg_500                              |  19|   0|   19|          0|
+    |r_0_shift_reg_V_rea_reg_479                              |  14|   0|   14|          0|
+    |r_3_shift_reg_V_rea_reg_473                              |  14|   0|   14|          0|
+    |tmp_6_reg_490                                            |  12|   0|   12|          0|
+    |tmp_s_reg_467                                            |  14|   0|   14|          0|
+    +---------------------------------------------------------+----+----+-----+-----------+
+    |Total                                                    | 135|   0|  135|          0|
+    +---------------------------------------------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++--------------------------+-----+-----+------------+---------------------+--------------+
+|         RTL Ports        | Dir | Bits|  Protocol  |    Source Object    |    C Type    |
++--------------------------+-----+-----+------------+---------------------+--------------+
+|ap_clk                    |  in |    1| ap_ctrl_hs |         TPG         | return value |
+|ap_rst                    |  in |    1| ap_ctrl_hs |         TPG         | return value |
+|ap_start                  |  in |    1| ap_ctrl_hs |         TPG         | return value |
+|ap_done                   | out |    1| ap_ctrl_hs |         TPG         | return value |
+|ap_idle                   | out |    1| ap_ctrl_hs |         TPG         | return value |
+|ap_ready                  | out |    1| ap_ctrl_hs |         TPG         | return value |
+|ap_ce                     |  in |    1| ap_ctrl_hs |         TPG         | return value |
+|ap_return_0               | out |   16| ap_ctrl_hs |         TPG         | return value |
+|ap_return_1               | out |   19| ap_ctrl_hs |         TPG         | return value |
+|data_int_V                |  in |   14|   ap_none  |      data_int_V     |    scalar    |
+|r_0_shift_reg_V_i         |  in |   14|   ap_ovld  |   r_0_shift_reg_V   |    pointer   |
+|r_0_shift_reg_V_o         | out |   14|   ap_ovld  |   r_0_shift_reg_V   |    pointer   |
+|r_0_shift_reg_V_o_ap_vld  | out |    1|   ap_ovld  |   r_0_shift_reg_V   |    pointer   |
+|r_1_shift_reg_V_i         |  in |   14|   ap_ovld  |   r_1_shift_reg_V   |    pointer   |
+|r_1_shift_reg_V_o         | out |   14|   ap_ovld  |   r_1_shift_reg_V   |    pointer   |
+|r_1_shift_reg_V_o_ap_vld  | out |    1|   ap_ovld  |   r_1_shift_reg_V   |    pointer   |
+|r_2_shift_reg_V_i         |  in |   14|   ap_ovld  |   r_2_shift_reg_V   |    pointer   |
+|r_2_shift_reg_V_o         | out |   14|   ap_ovld  |   r_2_shift_reg_V   |    pointer   |
+|r_2_shift_reg_V_o_ap_vld  | out |    1|   ap_ovld  |   r_2_shift_reg_V   |    pointer   |
+|r_3_shift_reg_V_i         |  in |   14|   ap_ovld  |   r_3_shift_reg_V   |    pointer   |
+|r_3_shift_reg_V_o         | out |   14|   ap_ovld  |   r_3_shift_reg_V   |    pointer   |
+|r_3_shift_reg_V_o_ap_vld  | out |    1|   ap_ovld  |   r_3_shift_reg_V   |    pointer   |
+|r_0_peak_reg_V_read       |  in |   19|   ap_none  | r_0_peak_reg_V_read |    scalar    |
++--------------------------+-----+-----+------------+---------------------+--------------+
+
