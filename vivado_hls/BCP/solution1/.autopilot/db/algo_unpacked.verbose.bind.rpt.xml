@@ -1,0 +1,93 @@
+<profile>
+
+<section name = "Vivado HLS Report for 'algo_unpacked'" level="0">
+<item name = "Date">Tue May 21 19:06:12 2019
+</item>
+<item name = "Version">2016.4 (Build 1733598 on Wed Dec 14 22:59:20 MST 2016)</item>
+<item name = "Project">BCP</item>
+<item name = "Solution">solution1</item>
+<item name = "Product family">virtex7</item>
+<item name = "Target device">xc7vx690tffg1927-2</item>
+</section>
+
+<section name = "Performance Estimates" level="0">
+<item name = "Timing (ns)">
+<section name = "" level="1">
+<item name = "Summary"><table name="" hasTotal="0">
+<keys size="4">Clock, Target, Estimated, Uncertainty</keys>
+<column name="ap_clk">8.33, 7.29, 1.04</column>
+</table>
+</item>
+</section>
+</item>
+<item name = "Latency (clock cycles)">
+<section name = "" level="1">
+<item name = "Summary"><table name="" hasTotal="0">
+<keys size="6">, min, max, min, max, Type</keys>
+<column name="">13, 13, 12, 12, function</column>
+</table>
+</item>
+<item name = "Detail">
+<section name = "" level="1">
+<item name = "Instance"><table name="" hasTotal="0">
+<keys size="7">Instance, Module, min, max, min, max, Type</keys>
+<column name="grp_TPG_fu_6492">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6506">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6520">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6534">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6548">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6562">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6576">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6590">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6604">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6618">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6632">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6646">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6660">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6674">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6688">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6702">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6716">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6730">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6744">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6758">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6772">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6786">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6800">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6814">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6828">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6842">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6856">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6870">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6884">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6898">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6912">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6926">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6940">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6954">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6968">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6982">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_6996">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_7010">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_7024">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_7038">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_7052">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_7066">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_7080">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_7094">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_7108">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_7122">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_7136">TPG, 2, 2, 1, 1, function</column>
+<column name="grp_TPG_fu_7150">TPG, 2, 2, 1, 1, function</column>
+</table>
+</item>
+<item name = "Loop"><table name="" hasTotal="0">
+<keys size="8">Loop Name, min, max, Latency, achieved, target, Count, Pipelined</keys>
+</table>
+</item>
+</section>
+</item>
+</section>
+</item>
+</section>
+</profile>
