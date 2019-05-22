@@ -53,7 +53,7 @@ static registers reg[N_CH_IN][NCrystalsPerLink];
 			short bitLo = (1+i)*16;
 			short bitHi_in = bitLo+13; // digi inputs are 14 bits
 			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
-			uint24_t mycoeff = 0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
+			uint24_t mycoeff = coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
 			link_out[lnk].range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
 		}
 	}
