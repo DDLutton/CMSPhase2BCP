@@ -1,0 +1,9 @@
+INFO: [SIM 2] *************** CSIM start ***************
+INFO: [SIM 4] CSIM will launch GCC as the compiler.
+   Compiling ../../../../src/algo_unpacked_tb.cpp in debug mode
+   Compiling ../../../../src/TPG.cc in debug mode
+   Compiling ../../../../src/algo_unpacked.cpp in debug mode
+   Generating csim.exe
+Error opening input file: ../data/test2_inp.txt
+CRITICAL WARNING: [SIM 100] 'csim_design' failed: nonzero return value.
+INFO: [SIM 3] *************** CSIM finish ***************

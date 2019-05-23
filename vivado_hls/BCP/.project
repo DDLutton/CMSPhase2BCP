@@ -37,14 +37,9 @@
 			<location>/afs/cern.ch/user/p/psiddire/CMSSW_10_2_2/src/CMSPhase2BCP/vivado_hls/BCP/.apc/.tb</location>
 		</link>
 		<link>
-			<name>.reference/LUT.h</name>
+			<name>.reference/algo_unpacked.h</name>
 			<type>1</type>
-			<location>/afs/cern.ch/user/p/psiddire/CMSSW_10_2_2/src/CMSPhase2BCP/vivado_hls/data/LUT.h</location>
-		</link>
-		<link>
-			<name>.reference/TPG.hh</name>
-			<type>1</type>
-			<location>/afs/cern.ch/user/p/psiddire/CMSSW_10_2_2/src/CMSPhase2BCP/vivado_hls/src/TPG.hh</location>
+			<location>/afs/cern.ch/user/p/psiddire/CMSSW_10_2_2/src/CMSPhase2BCP/vivado_hls/src/algo_unpacked.h</location>
 		</link>
 		<link>
 			<name>solution1/constraints</name>

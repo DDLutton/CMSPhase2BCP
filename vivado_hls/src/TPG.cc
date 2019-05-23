@@ -6,7 +6,7 @@
 using namespace std;
 
 uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
-  int8_t j, k;
+  int8_t j;
   int13_t correctedADC = 0;
   uint12_t uncorrectedADC = 0;
   uint18_t linearizerOutput = 0;
@@ -23,7 +23,7 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   int19_t acc = 0;
   int7_t weight[5] = {24, 31, 16, -35, -36}; //Filter Weights
   int19_t ampPeak = 0;
-  uint16_t tmpPeak = 0;
+  uint16_t tmpPeak = 0X0000;
 
   // Linearizer
   if (data_int > 0X3FFF) fprintf(stderr, "ERROR IN INPUT SAMPLE"); //Digi Input
@@ -37,6 +37,7 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   if (correctedADC < 0) linearizerOutput = shiftlin << 12; 
   prod = correctedADC * mult; 
   linearizerOutput = prod >> (shiftlin + 2); //Linearization Step Output
+  if (linearizerOutput > 0X30000) linearizerOutput = 0;
 
   // Amplitude Filter
   // 4 Stage TAP
@@ -57,7 +58,7 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
     acc = acc + mul;
   }
   filterOutput = acc;
-  //if (filterOutput < 0) filterOutput = 0;
+  if (filterOutput < 0 or r.shift_reg[3]==0) filterOutput = 0;
   if (filterOutput > 0X3FFFF) filterOutput = 0X3FFFF;
 
   // Peak Finder
@@ -69,10 +70,10 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
 	}
 	tmpPeak = ampPeak >> 2;
 	if (tmpPeak > 0X3FF){
-		tmpPeak = 0X3FF;
+		tmpPeak = 0X03FF;
     }
   }
-  r.peak_reg[k] = r.peak_reg[k-1];
+  r.peak_reg[1] = r.peak_reg[0];
   r.peak_reg[0] = filterOutput;
   return tmpPeak;
 }
