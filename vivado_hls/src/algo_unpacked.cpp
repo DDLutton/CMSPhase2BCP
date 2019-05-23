@@ -47,16 +47,17 @@ static registers reg[N_CH_IN][NCrystalsPerLink];
 
 	for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {
 #pragma HLS UNROLL
+		ap_uint<192> output_word;
 
 		for (int8_t i = 0; i < NCrystalsPerLink; i++){
 #pragma HLS UNROLL
 			short bitLo = (1+i)*16;
 			short bitHi_in = bitLo+13; // digi inputs are 14 bits
 			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
-			uint24_t mycoeff = coeff[lnk*NCrystalsPerLink+i];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
-			link_out[lnk].range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
-			if (link_out[lnk].range(bitHi_out, bitLo)>0) cout<<int(lnk)<<" "<<int(i)<<" "<<link_out[lnk].range(bitHi_out, bitLo)<<endl;
+			uint24_t mycoeff = coeff[lnk*10];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
+			output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
 		}
+		link_out[lnk]=output_word;
 	}
 
 	// Comment the following not to overwrite the output
