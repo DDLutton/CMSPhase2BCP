@@ -35,7 +35,7 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   mult = (coeff & 0XFF0000) >> 16; //Multiplication value
   correctedADC = (uncorrectedADC - base); // Subtract Pedestal
   //prod = correctedADC * mult;
-  linearizerOutput = (correctedADC * mult) >> (shiftlin + 2); //Linearization Step Output
+  linearizerOutput = (correctedADC * mult) >> 2; //Linearization Step Output
   if (correctedADC < 0) linearizerOutput = shiftlin << 12; 
 
   // Amplitude Filter
