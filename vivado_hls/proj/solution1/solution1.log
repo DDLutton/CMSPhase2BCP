@@ -10,13 +10,6 @@ Copyright (C) 1986-2016 Xilinx, Inc. All Rights Reserved.
 ***** C SIMULATION *****
 @I [SIM-2] *************** CSIM start ***************
 @I [SIM-4] CSIM will launch GCC as the compiler.
-@E Simulation failed: Function 'main' returns nonzero value '1'.
-@E [SIM-100] 'csim_design' failed: nonzero return value.
+@I [SIM-1] CSim done with 0 errors.
 @I [SIM-3] *************** CSIM finish ***************
-4
-    while executing
-"source [lindex $::argv 1] "
-    ("uplevel" body line 1)
-    invoked from within
-"uplevel \#0 { source [lindex $::argv 1] } "
-
+***** C SIMULATION COMPLETED IN 0h0m2s *****

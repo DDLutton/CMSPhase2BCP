@@ -61,8 +61,8 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 		}
 		link_out[lnk]=output_word;
 	}
-	cout << "shift " << reg[1][1].shift_reg[0] << " " << reg[1][1].shift_reg[1] << " " << reg[1][1].shift_reg[2] << " " << reg[1][1].shift_reg[3] << endl;
-	cout << "peak " << reg[1][1].peak_reg[0] << " " << reg[1][1].peak_reg[1] << endl;
+	cout << "shift " << reg[0][1].shift_reg[0] << " " << reg[0][1].shift_reg[1] << " " << reg[0][1].shift_reg[2] << " " << reg[0][1].shift_reg[3] << endl;
+	cout << "peak " << reg[0][1].peak_reg[0] << " " << reg[0][1].peak_reg[1] << endl;
 
 	// Comment the following not to overwrite the output
 	/*for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {

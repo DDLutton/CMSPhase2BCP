@@ -20,9 +20,9 @@ int main(int argc, char ** argv) {
 	string test_vector;
 	test_vector = argv[1];
 
-	string ifname("../data/" + test_vector + "_inp.txt"); // input test vector
-	string ofname("../data/" + test_vector + "_out.txt"); // output test vector
-	string orfname("../data/" + test_vector + "_out_ref.txt"); // reference output vector
+	string ifname(test_vector + "_inp.txt"); // input test vector //"../data/" + 
+	string ofname(test_vector + "_out.txt"); // output test vector
+	string orfname(test_vector + "_out_ref.txt"); // reference output vector
 
 	// Open input stream...
 	ifstream ifs(ifname.c_str());

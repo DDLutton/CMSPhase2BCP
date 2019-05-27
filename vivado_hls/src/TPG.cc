@@ -34,10 +34,9 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   shiftlin = (coeff & 0XF000) >> 12; //Shift Value
   mult = (coeff & 0XFF0000) >> 16; //Multiplication value
   correctedADC = (uncorrectedADC - base); // Subtract Pedestal
+  //prod = correctedADC * mult;
+  linearizerOutput = (correctedADC * mult) >> (shiftlin + 2); //Linearization Step Output
   if (correctedADC < 0) linearizerOutput = shiftlin << 12; 
-  prod = correctedADC * mult; 
-  linearizerOutput = prod >> (shiftlin + 2); //Linearization Step Output
-  if (linearizerOutput > 0X30000) linearizerOutput = 0;
 
   // Amplitude Filter
   // 4 Stage TAP
@@ -58,19 +57,19 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
     acc = acc + mul;
   }
   filterOutput = acc;
-  if (filterOutput < 0 or r.shift_reg[3]==0) filterOutput = 0;
+  if (filterOutput < 0 or m==0) filterOutput = 0;
   if (filterOutput > 0X3FFFF) filterOutput = 0X3FFFF;
 
   // Peak Finder
   if (r.peak_reg[0] > filterOutput && r.peak_reg[0] > r.peak_reg[1]){
-	// Trigger Primitive Format 16 bits(6 bits timing information, 10 bits amplitude information) 
-	ampPeak = r.peak_reg[0];
-	if (ampPeak > 0XFFF){
-	  ampPeak = 0XFFF;
-	}
-	tmpPeak = ampPeak >> 2;
-	if (tmpPeak > 0X3FF){
-		tmpPeak = 0X03FF;
+    // Trigger Primitive Format 16 bits(6 bits timing information, 10 bits amplitude information) 
+    ampPeak = r.peak_reg[0];
+    if (ampPeak > 0XFFF){
+      ampPeak = 0XFFF;
+    }
+    tmpPeak = ampPeak >> 2;
+    if (tmpPeak > 0X3FF){
+      tmpPeak = 0X03FF;
     }
   }
   r.peak_reg[1] = r.peak_reg[0];
