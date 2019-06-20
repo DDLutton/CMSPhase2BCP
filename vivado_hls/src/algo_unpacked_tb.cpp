@@ -16,12 +16,13 @@ ap_uint<192> link_in[N_CH_IN];
 ap_uint<192> link_out[N_CH_OUT];
 
 int main(int argc, char ** argv) {
-
+	//So the test_vector defines that name of the input and output files.
 	string test_vector;
 	test_vector = argv[1];
 
 	string ifname(test_vector + "_inp.txt"); // input test vector //"../data/" + 
 	string ofname(test_vector + "_out.txt"); // output test vector
+	//The reference output is what our output will be compared to at the end.
 	string orfname(test_vector + "_out_ref.txt"); // reference output vector
 
 	// Open input stream...
@@ -33,6 +34,7 @@ int main(int argc, char ** argv) {
 
 	//...and position at the beginning of input test data
 	string line;
+	//While loop reads through the input until it finds the "#BeginData" string
 	while (true) {
 		ifs >> line;
 		if (line.compare("#BeginData") == 0)
@@ -52,7 +54,8 @@ int main(int argc, char ** argv) {
 		cerr << "Error opening output reference file: " << orfname << endl;
 		exit(1);
 	}
-
+	//Wordcount should move up by three per bunch and is a 32 bit unsigned integer
+	//so that means it can take 1431655765 bunches.
 	uint32_t wordCnt = 0;
 
 	uint64_t data[N_CH_IN];
@@ -62,8 +65,11 @@ int main(int argc, char ** argv) {
 	ofs << "#BeginData" << endl;
 
 	int j = 0;
-
+	//Is both the while condition and the break bit necessary?
+	//wouldn't it work like the True while above?
 	while (!ifs.eof()) {
+		//The cyc from 0 to 2 takes into account that each bunch crossing is over three wordCnts,
+		//so the data to be read into each link_in is split into three
 		for (int cyc = 0; cyc < 3; cyc++) {
 			ifs >> hex >> wordCnt;
 			if  (ifs.eof())
@@ -72,19 +78,20 @@ int main(int argc, char ** argv) {
 			for (int link = 0; link < N_CH_IN; link++)
 			{
 				ap_uint<64> tmp;
+				//Moved the input writing out of the if statements, since it
+				//seemed like it was always run anyway
+				ifs >> hex >> tmp;
 				if (cyc == 0) {
-					ifs >> hex >> tmp;
 					link_in[link].range(63, 0) = tmp;
 				}
 				else if (cyc == 1) {
-					ifs >> hex >> tmp;
 					link_in[link].range(127, 64) = tmp;
 				}
 				else {
-					ifs >> hex >> tmp;
 					link_in[link].range(191, 128) = tmp;
 				}
-
+				//If we hit the end while looking over the links in a cyc, then it breaks out of the two for loops and
+				//the while loop immediately without running algo_unpacked.
 				if  (ifs.eof())
 					break;
 			}
@@ -97,9 +104,9 @@ int main(int argc, char ** argv) {
 
 		algo_unpacked(link_in, link_out, j);
 		j += 1;
-
+		//wordCnt is set back by two to line up with the data output in the following for loop.
 		wordCnt-=2;
-
+		//Pretty straightforward; just setting up an output txt file that is in the same format as the input one.
 		for (int cyc = 0; cyc < 3; cyc++) {
 			ofs << "0x" << setfill('0') << setw(4) << hex << wordCnt++ << "   ";
 			for (int link = 0; link < N_CH_OUT; link++) {
@@ -117,7 +124,8 @@ int main(int argc, char ** argv) {
 	}
 
 	string output_diff("diff -w " + ofname + " " + orfname);
-
+	//The "system" here reads the above string as a command, and this seems to be where it checks 
+	//the difference between the two resulting text files.
 	if (system(output_diff.c_str())) {
 		cout << "*** Output data verification. FAILED! ***" << endl;
 		return 0;
