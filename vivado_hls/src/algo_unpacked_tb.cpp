@@ -65,8 +65,6 @@ int main(int argc, char ** argv) {
 	ofs << "#BeginData" << endl;
 
 	int j = 0;
-	//Is both the while condition and the break bit necessary?
-	//wouldn't it work like the True while above?
 	while (!ifs.eof()) {
 		//The cyc from 0 to 2 takes into account that each bunch crossing is over three wordCnts,
 		//so the data to be read into each link_in is split into three

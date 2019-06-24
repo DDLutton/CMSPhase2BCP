@@ -74,17 +74,19 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 	//so each element of the array can have two signed ints and 4 unsigned ints.
 	//Here we have a big 2D array of registers, whose size is dependent on the number of channels
 	//and the number of crystals
+	//Very important to note that this is specifically a "static" variable. This means if you, for instance
+	//call algo_unpacked twice, it will keep the values it had in it from last time.
     static registers reg[N_CH_IN][NCrystalsPerLink];
 //Array partition stuff same as before.
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
 	//Looping over each link in the incoming data. Here it is 48 links.
 	for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {
-//The UNROLL pragma <to be inputted>
+//The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
 #pragma HLS UNROLL
 		ap_uint<192> output_word;
 		//Then looping over each crystal contained in the link.
 		for (int8_t i = 0; i < NCrystalsPerLink; i++){
-//The UNROLL pragma <to be inputted>
+//The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
 #pragma HLS UNROLL
 			//Getting the bit positions and range of specifically the crystal inputs, *not* the metadata from the links
 			//bitLo is moved forward 16 bits (4 hex) because the first 16 bits is metadata
