@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <iostream>
 using namespace std;
-//NOTE: Something that will come up a lot here is bit shifting with signed and unsigned integers
+//NOTE11: Something that will come up a lot here is bit shifting with signed and unsigned integers
 //and one big thing to note is that when assigning a narrower int to a wider int after a left bit shift
 //you can lose information, as shown in this example from the 2019 Xilinx Vivado HLS user guide:
 /*
@@ -19,8 +19,8 @@ Rslt = Val2 >> 4; //Yields: 0x1ffc, sign is maintained and extended
 //The result of the last one showcases the behavior of assigning a shifted signed ap_int to
 //a wider unsigned ap_int, which is that it extends the 1's all the way to the wider's msb
 //and *then* treats it as unsigned, so you can get quite a large number.
-//There are some points in the following code where I can't tell if this behavior is anticipated,
-//and I will note them.
+//There is a point in the following code where I can't tell if this behavior is anticipated,
+//and I will note it
 uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   int8_t j;
   int13_t correctedADC = 0;
@@ -29,7 +29,6 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   uint12_t base = 0;
   uint24_t coeff = 0;
   uint4_t shiftlin = 0;
-  //Note: is uint8_t ever defined?
   uint8_t mult = 0;
   int21_t prod = 0;
   int19_t filterOutput = 0;
@@ -54,9 +53,9 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   //The hex number here corresponds to 111111110000000000000000, so it selects that bit of lincoeff and then shifts
   //each bit 16 to the right. 
   //What seems odd to me is that this gets the bits *just* to the beginning and no further,
-  //so if the if statement here is true for that it should also be true for lincoeff as is.
+  //so if the if statement here is true for that it should also be true for (lincoeff & 0XFF0000) as is.
   //But maybe a shift is faster than reading through all those zeroes.
-  //NOTE: an interesting test might be changing this and seeing how the solution in Vivado changes.
+  //NOTE12: an interesting test might be changing this and seeing how the solution in Vivado changes.
   if (((lincoeff & 0XFF0000) >> 16) == 0) coeff = 0; //Linearization Coefficients 
   else coeff = lincoeff;
   //So the base level is set by these coefficients, and this is what will be subtracted off the ADC.
@@ -77,12 +76,13 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   // prod = correctedADC * mult;
   //Seems odd this if is after setting linearizerOutput. Waste of a step.
   //Might be optimized away?
-  //NOTE: Try changing this also.
+  //NOTE13: Try changing this also.
   //So to figure out what's happening here, note that mult is an 8 bit number, so between
   //0 and 255. correctedADC is a 13 bit signed number, so between -4095 and 4095.
   //linearizerOutput is an 18 bit number, so between 0 and 262143.
-  //If correctedADC is negative this is nonsense (NOTE: negative shifting is allowed and well defined so nvm), since
-  //linearizerOutput is unsigned and >> shouldn't be used w/ negatives, so let's look at only the positive cases.
+  //If correctedADC is negative this is a bigg number, since linearizerOutput is unsigned the >>2 will extend
+  //the ones but then those 1s will become just regular bits in an unsigned integer all the way at the
+  //top. This behavior is immediately corrected though, so let's look at only the positive cases.
   //The min is obviously 0, and the max is 4095*255=1044225=11111110111100000001 which is 20 bits.
   //However, since it's bit shifted 2 to the right, we get 111111101111000000 which is 261056.
   //Note that this means for mult=1 the minimum correctedADC can be before hitting zero is b11=3
@@ -90,12 +90,14 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   //the width of the sum of their widths. In this case, cADC is 13 bits and mult is 8 bits, meaning it returns
   //a 21 bit signed number. However, this number is then shifted two towards zero (either left or right
   //if it is positive or negative), and because linearizerOutput is an unsigned 18 bit number, the most significant
-  //three bits are cut off during its assignment
+  //three bits are cut off during its assignment. For a positive number this is basically like just removing
+  //the two lsb and the msb.
   linearizerOutput = (correctedADC * mult) >> 2; //Linearization Step Output
   //In this case, if cADC is negative, linearizerOutput becomes the shiftlin variable but shifted by 12 to the left.
   //From what I understand about bit shifting, this should lose the 12 msb of shiftlin, which, since it is 4 bits
   //total, is all of its information and it should become just 0.
-  //NOTE: don't know why this isn't just set to 0 if that's the case. Maybe set to zero.
+  //NOTE14: don't know why this isn't just set to 0 if that's the case. Maybe set to zero.
+  //NOTE15: not sure why this isn't an if - else thing w/ lO above
   if (correctedADC < 0) linearizerOutput = shiftlin << 12; 
 
   // Amplitude Filter
@@ -115,7 +117,7 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
 //Which makes no sense to me, as it seems the order here is very important.
 //But maybe if these are all run in parallel they are done at the same time kind of before
 //being updated?
-//NOTE: Try commenting this out for testing
+//NOTE16: Try commenting this out for testing
 #pragma HLS dependence variable=r.shift_reg inter false
     r.shift_reg[j] = r.shift_reg[j-1];
   }
@@ -131,7 +133,7 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   mul = pro >> shiftfilter;
   //acc is a signed 19 bit number
   //Note that this has a small overflow problem because acc+mul returns a 20 bit number
-  //but probably not a problem.
+  //but probably not a problem given how much shiftfilter should reduce mul from its msb.
   acc = acc + mul;
   //Then it goes over the shift filter applying the weights, performing the shift, and adding up the results.
   //This is essentially checking the linearizerOutputs of each group of 5 incoming points
@@ -152,13 +154,13 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   //you could get that m!=0 before the first 0 you want to actually count from.
   //Potential fix by just checking if each previous value in the shiftreg is 0
   //unless we expected some bumpiness?
-  //NOTE: look into this
+  //NOTE17: look into this
   if (filterOutput < 0 or m==0) filterOutput = 0;
   //If it's greater than this big amount it's set to that big amount.
   //I'm not even sure this should be possible since it's a 19 bit signed number
   //and above we already set it to zero if it's negative so that last bit shouldn't even be
   //in use theoretically.
-  //NOTE: try disabling in testing.
+  //NOTE18: try disabling in testing.
   //Could also potentially make filterOutput a little smaller, since the returned peak is actually a max of
   //3FF, but maybe it's good to have this precision for the actual checking.
   if (filterOutput > 0X3FFFF) filterOutput = 0X3FFFF;
@@ -173,7 +175,7 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
     //and if it is we set it equal to that big number.
     //One thing I just realized is that peak_reg is a signed 19 bit variable but it should never be negative,
     //since it gets its values from filterOutput and that is set to zero if it's negative.
-    //NOTE: try changing peak_reg to an unsigned variable
+    //NOTE19: try changing peak_reg to an unsigned variable
     //The reason it's set to this number specifically before bit shifting is that it will make that by-two bit shift
     //into 3FF, which is ten 1's. However, couldn't this be made slightly better with an if/else?
     //since if you just set ampPeak=3FF and do no bit shifting then you're good.
@@ -183,7 +185,7 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
     }
     //So then we shift it by two. Because ampPeak shouldn't be negative it follows that you shouldn't have
     //weird conversion issues w/ tempPeak. So you should never run that if
-    //NOTE: try removing the if in testing.
+    //NOTE20: try removing the if in testing.
     tmpPeak = ampPeak >> 2;
     if (tmpPeak > 0X3FF){
       tmpPeak = 0X03FF;

@@ -12,13 +12,14 @@ using namespace std;
 //Not entirely sure what is happening here. In the current git commit the algo_unpacked.h file is in the same folder
 //as the TPG.hh file which is in the same folder as the algo_unpacked stuff (all in src)
 //What is hls_algo?
-//#include "algo_unpacked.h"   // This is where you should have had hls_algo - if not find the header file and fix this - please do not copy this file as that defines the interface
-#include "../src/algo_unpacked.h"
+#include "algo_unpacked.h"   // This is where you should have had hls_algo - if not find the header file and fix this - please do not copy this file as that defines the interface
+//#include "../src/algo_unpacked.h"
 #include "TPG.hh"
 #include "../data/LUT.h"
-
+//NOTE2: this may or may not be true. From what I gathered from speaking to Prasanna, it seems like
+//the 48-63 range is what we want to avoid.
 const int NCrystalsPerLink = 11; // Bits 16-31, 32-47, ..., 176-191, keeping range(15, 0) unused
-//Note: N.B. means "note well" or something in Latin, so, you know, "note well".
+//Note3: N.B. means "note well" or something in Latin, so, you know, "note well".
  /*
   * algo_unpacked interface exposes fully unpacked input and output link data.
   * This version assumes use of 10G 8b10b links, and thus providing 192bits/BX/link.
@@ -35,9 +36,6 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 {
 
 // !!! Retain these 4 #pragma directives below in your algo_unpacked implementation !!!
-//Note that in the debug mode in vivado for the C simulation, you have a bunch of variables being "optimized out" which can make
-//it harder to follow along. I'm not sure, but I suspect disabling these pragma lines would make it more clear.
-//Obviously they would need to be reenabled at synthesis time since they are the optimizations.
 //ARRAY_PARTITION basically takes regular arrays and turns them into just
 //a bunch of individual variables of the type that the array is holding.
 //This is doing it to the link_in and link_out variables, which are essentially the arrays that hold the input
@@ -59,6 +57,7 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 //returning of the output data. I'm a little confused by the fact that this function doesn't return anything.
 //But rather seems to work by changing the link_out array which doesn't require a return.
 //However, I see this being used elsewhere with void functions so I really don't know now.
+//NOTE4: figure this out
 #pragma HLS INTERFACE ap_ctrl_hs port=return
    
 // null algo specific pragma: avoid fully combinatorial algo by specifying min latency
@@ -76,6 +75,7 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 	//and the number of crystals
 	//Very important to note that this is specifically a "static" variable. This means if you, for instance
 	//call algo_unpacked twice, it will keep the values it had in it from last time.
+	//NOTE5: try initializing it all to zero so that maybe the program wont spit out a billion warnings
     static registers reg[N_CH_IN][NCrystalsPerLink];
 //Array partition stuff same as before.
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
@@ -84,17 +84,64 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 //The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
 #pragma HLS UNROLL
 		ap_uint<192> output_word;
+		//NOTE6: very important. Because of how the links are composed where the first four hex numbers
+		//(reading left to right) are the metadata we want to avoid, they will *not* be the first 16 bits
+		//of link_in[lnk]. In fact, they will be the last 16 of the line they're on, so we should instead be avoiding
+		//bits 48-63.
+		output_word.range(63,48)=link_in[lnk].range(63,48);
 		//Then looping over each crystal contained in the link.
-		for (int8_t i = 0; i < NCrystalsPerLink; i++){
+		/*
+		for (int8_t i = 0; i < 3; i++){
 //The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
 #pragma HLS UNROLL
 			//Getting the bit positions and range of specifically the crystal inputs, *not* the metadata from the links
 			//bitLo is moved forward 16 bits (4 hex) because the first 16 bits is metadata
 			//Then the rest of the digi input is 14 bits 
-			//NOTE: I still don't fully understand what happens w/ the last 2 bits.
-			//NOTE: Not sure why these are specifically shorts. They go up to,at most (NCrystalsPerLink*16)+15
+			//NOTE7: I still don't fully understand what happens w/ the last 2 bits.
+			//NOTE8: Not sure why these are specifically shorts. They go up to,at most (NCrystalsPerLink*16)+15
 			//which at current is like 8 bits so I dunno.
-			short bitLo = (1+i)*16;
+			//NOTE9: as mentioned above, we don't want to avoid the first 16 bits, instead the bits 48-63
+			//so I've modified the code to do this
+			short bitLo = i*16;
+			short bitHi_in = bitLo+13; // digi inputs are 14 bits
+			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
+			//The coeff array is defined in LUT.h, and essentially contains the 8 bit base level response (pedestal);
+			//the 4 bit shift value; and the 8 bit
+			uint24_t mycoeff = coeff[lnk*10+j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
+			//cout << "Input " << link_in[lnk].range(bitHi_in, bitLo) << " " << mycoeff << endl;
+			//Note, the .range() method on ap_int operators specifically deals with bits.
+			//This is the actual linearization, FIL, and Peakfinder bit
+			output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
+		}
+		*/
+		//Because we need to skip the 4th set of data in link_in I am utilizing two for loops.
+		//For what I can tell this adds 24 flip flops from the original solution, but doesn't seem
+		//to change much else.
+		//NOTE10: if statement version:
+		for (int8_t i = 0; i <= NCrystalsPerLink; i++){
+//The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
+#pragma HLS UNROLL
+			if (i==3){
+				continue;
+			}
+			short bitLo = i*16;
+			short bitHi_in = bitLo+13; // digi inputs are 14 bits
+			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
+			uint24_t mycoeff = coeff[lnk*10+j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
+			//cout << "Input " << link_in[lnk].range(bitHi_in, bitLo) << " " << mycoeff << endl;
+			if (i>3){
+				output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i-1]);
+			}
+			else {
+				output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
+			}
+		} 
+		//If statement version adds also 24 flip flops so probably like exactly the same thing
+		/*
+		for (int8_t i = 3; i < NCrystalsPerLink; i++){
+//The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
+#pragma HLS UNROLL
+			short bitLo = (i+1)*16;
 			short bitHi_in = bitLo+13; // digi inputs are 14 bits
 			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
 			//The coeff array is defined in LUT.h, and essentially contains the 8 bit base level response (pedestal);
@@ -109,6 +156,7 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 		//Probably optimized in the system anyway, but why not just have link_out in the place of output_word
 		link_out[lnk]=output_word;
 	}
+	*/
 	//Seems to be just a test, giving out the first shift values and the first peak values in the reg.
 	cout << "shift " << reg[0][1].shift_reg[0] << " " << reg[0][1].shift_reg[1] << " " << reg[0][1].shift_reg[2] << " " << reg[0][1].shift_reg[3] << endl;
 	cout << "peak " << reg[0][1].peak_reg[0] << " " << reg[0][1].peak_reg[1] << endl;

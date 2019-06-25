@@ -105,6 +105,8 @@ int main(int argc, char ** argv) {
 		//wordCnt is set back by two to line up with the data output in the following for loop.
 		wordCnt-=2;
 		//Pretty straightforward; just setting up an output txt file that is in the same format as the input one.
+		//Note1: if unchanged from Pra version, it seems like you can potentially write nonsense into the first 16 bits
+		//of link_out because output_word is never initialized
 		for (int cyc = 0; cyc < 3; cyc++) {
 			ofs << "0x" << setfill('0') << setw(4) << hex << wordCnt++ << "   ";
 			for (int link = 0; link < N_CH_OUT; link++) {
