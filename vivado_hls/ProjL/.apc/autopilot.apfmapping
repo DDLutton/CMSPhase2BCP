@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autopilotfilemapping:AutoPilotFileMapping xmlns:autopilotfilemapping="www.autoesl.com/autopilotfilemapping">
+  <source>
+    <originFiles name="algo_unpacked.cpp" path="/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/praCodeMyFork/CMSPhase2BCP/vivado_hls/src/algo_unpacked.cpp"/>
+    <originFiles name="TPG.cc" path="/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/praCodeMyFork/CMSPhase2BCP/vivado_hls/src/TPG.cc"/>
+  </source>
+  <testbench>
+    <originFiles name="test3_out_ref.txt" path="/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/praCodeMyFork/CMSPhase2BCP/vivado_hls/data/test3_out_ref.txt"/>
+    <originFiles name="test3_inp.txt" path="/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/praCodeMyFork/CMSPhase2BCP/vivado_hls/data/test3_inp.txt"/>
+    <originFiles name="test2_out_ref.txt" path="/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/praCodeMyFork/CMSPhase2BCP/vivado_hls/data/test2_out_ref.txt"/>
+    <originFiles name="test2_inp.txt" path="/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/praCodeMyFork/CMSPhase2BCP/vivado_hls/data/test2_inp.txt"/>
+    <originFiles name="test1_out_ref.txt" path="/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/praCodeMyFork/CMSPhase2BCP/vivado_hls/data/test1_out_ref.txt"/>
+    <originFiles name="test1_inp.txt" path="/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/praCodeMyFork/CMSPhase2BCP/vivado_hls/data/test1_inp.txt"/>
+    <originFiles name="rnd_out_ref.txt" path="/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/praCodeMyFork/CMSPhase2BCP/vivado_hls/data/rnd_out_ref.txt"/>
+    <originFiles name="rnd_inp.txt" path="/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/praCodeMyFork/CMSPhase2BCP/vivado_hls/data/rnd_inp.txt"/>
+    <originFiles name="algo_unpacked_tb.cpp" path="/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/praCodeMyFork/CMSPhase2BCP/vivado_hls/src/algo_unpacked_tb.cpp"/>
+  </testbench>
+</autopilotfilemapping:AutoPilotFileMapping>

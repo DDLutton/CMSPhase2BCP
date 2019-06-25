@@ -1,0 +1,176 @@
+<profile>
+
+<section name = "Vivado HLS Report for 'TPG'" level="0">
+<item name = "Date">Tue Jun 25 17:13:57 2019
+</item>
+<item name = "Version">2018.1 (Build 2188600 on Wed Apr 04 19:04:02 MDT 2018)</item>
+<item name = "Project">ProjL</item>
+<item name = "Solution">solution1</item>
+<item name = "Product family">virtex7</item>
+<item name = "Target device">xc7vx690tffg1927-2</item>
+</section>
+
+<section name = "Performance Estimates" level="0">
+<item name = "Timing (ns)">
+<section name = "" level="1">
+<item name = "Summary"><table name="" hasTotal="0">
+<keys size="4">Clock, Target, Estimated, Uncertainty</keys>
+<column name="ap_clk">8.33, 6.82, 1.04</column>
+</table>
+</item>
+</section>
+</item>
+<item name = "Latency (clock cycles)">
+<section name = "" level="1">
+<item name = "Summary"><table name="" hasTotal="0">
+<keys size="6">, min, max, min, max, Type</keys>
+<column name="">2, 2, 1, 1, function</column>
+</table>
+</item>
+<item name = "Detail">
+<section name = "" level="1">
+<item name = "Instance"><table name="" hasTotal="0">
+<keys size="7">Instance, Module, min, max, min, max, Type</keys>
+</table>
+</item>
+<item name = "Loop"><table name="" hasTotal="0">
+<keys size="8">Loop Name, min, max, Latency, achieved, target, Count, Pipelined</keys>
+</table>
+</item>
+</section>
+</item>
+</section>
+</item>
+</section>
+
+<section name = "Utilization Estimates" level="0">
+<item name = "Summary"><table name="" hasTotal="1">
+<keys size="5">Name, BRAM_18K, DSP48E, FF, LUT</keys>
+<column name="DSP">-, 2, -, -</column>
+<column name="Expression">-, -, 0, 461</column>
+<column name="FIFO">-, -, -, -</column>
+<column name="Instance">-, -, -, -</column>
+<column name="Memory">-, -, -, -</column>
+<column name="Multiplexer">-, -, -, -</column>
+<column name="Register">-, -, 222, -</column>
+<specialColumn name="Available">2940, 3600, 866400, 433200</specialColumn>
+<specialColumn name="Utilization (%)">0, ~0, ~0, ~0</specialColumn>
+</table>
+</item>
+<item name = "Detail">
+<section name = "" level="1">
+<item name = "Instance"><table name="" hasTotal="1">
+<keys size="6">Instance, Module, BRAM_18K, DSP48E, FF, LUT</keys>
+</table>
+</item>
+<item name = "DSP48"><table name="" hasTotal="0">
+<keys size="3">Instance, Module, Expression</keys>
+<column name="algo_unpacked_mulbkb_U1">algo_unpacked_mulbkb, i0 * i1</column>
+<column name="algo_unpacked_mulcud_U2">algo_unpacked_mulcud, i0 * i1</column>
+</table>
+</item>
+<item name = "Memory"><table name="" hasTotal="1">
+<keys size="9">Memory, Module, BRAM_18K, FF, LUT, Words, Bits, Banks, W*Bits*Banks</keys>
+</table>
+</item>
+<item name = "FIFO"><table name="" hasTotal="1">
+<keys size="7">Name, BRAM_18K, FF, LUT, Depth, Bits, Size:D*B</keys>
+</table>
+</item>
+<item name = "Expression"><table name="" hasTotal="1">
+<keys size="7">Variable Name, Operation, DSP48E, FF, LUT, Bitwidth P0, Bitwidth P1</keys>
+<column name="addconv_3_cast_fu_501_p2">+, 0, 0, 18, 18, 18</column>
+<column name="addconv_3_fu_495_p2">+, 0, 0, 18, 19, 19</column>
+<column name="tmp3_fu_463_p2">+, 0, 0, 18, 19, 19</column>
+<column name="tmp4_fu_479_p2">+, 0, 0, 18, 19, 19</column>
+<column name="tmp5_fu_469_p2">+, 0, 0, 18, 19, 19</column>
+<column name="tmp_16_fu_474_p2">+, 0, 0, 25, 18, 18</column>
+<column name="tmp_19_fu_484_p2">+, 0, 0, 25, 18, 18</column>
+<column name="tmp_20_fu_490_p2">+, 0, 0, 18, 18, 18</column>
+<column name="p_neg_fu_263_p2">-, 0, 0, 31, 1, 24</column>
+<column name="r_V_3_fu_211_p2">-, 0, 0, 20, 13, 13</column>
+<column name="r_V_4_fu_285_p2">-, 0, 0, 32, 25, 25</column>
+<column name="r_V_6_2_fu_401_p2">-, 0, 0, 31, 24, 24</column>
+<column name="r_V_6_3_fu_443_p2">-, 0, 0, 31, 24, 24</column>
+<column name="ap_block_pp0_stage0_01001">and, 0, 0, 2, 1, 1</column>
+<column name="or_cond1_fu_536_p2">and, 0, 0, 2, 1, 1</column>
+<column name="icmp1_fu_561_p2">icmp, 0, 0, 11, 6, 1</column>
+<column name="icmp_fu_365_p2">icmp, 0, 0, 11, 7, 1</column>
+<column name="tmp_2_fu_343_p2">icmp, 0, 0, 18, 18, 1</column>
+<column name="tmp_3_fu_531_p2">icmp, 0, 0, 18, 19, 19</column>
+<column name="tmp_4_fu_349_p2">icmp, 0, 0, 18, 19, 19</column>
+<column name="ap_block_pp0_stage0_subdone">or, 0, 0, 2, 1, 1</column>
+<column name="or_cond_fu_515_p2">or, 0, 0, 2, 1, 1</column>
+<column name="agg_result_V_1_fu_575_p3">select, 0, 0, 10, 1, 10</column>
+<column name="filterOutput_V_fu_520_p3">select, 0, 0, 18, 1, 1</column>
+<column name="linearizerOutput_V_1_fu_242_p3">select, 0, 0, 18, 1, 1</column>
+<column name="p_phitmp3_fu_567_p3">select, 0, 0, 10, 1, 2</column>
+<column name="tmpPeak_V_fu_541_p3">select, 0, 0, 16, 1, 10</column>
+<column name="ap_enable_pp0">xor, 0, 0, 2, 1, 2</column>
+</table>
+</item>
+<item name = "Multiplexer"><table name="" hasTotal="1">
+<keys size="5">Name, LUT, Input Size, Bits, Total Bits</keys>
+</table>
+</item>
+<item name = "Register"><table name="" hasTotal="1">
+<keys size="5">Name, FF, LUT, Bits, Const Bits</keys>
+<column name="ap_CS_fsm">1, 0, 1, 0</column>
+<column name="ap_enable_reg_pp0_iter1">1, 0, 1, 0</column>
+<column name="ap_enable_reg_pp0_iter2">1, 0, 1, 0</column>
+<column name="filterOutput_V_reg_683">18, 0, 18, 0</column>
+<column name="icmp_reg_673">1, 0, 1, 0</column>
+<column name="icmp_reg_673_pp0_iter1_reg">1, 0, 1, 0</column>
+<column name="linearizerOutput_V_1_reg_625">18, 0, 18, 0</column>
+<column name="mul_V_reg_642">19, 0, 19, 0</column>
+<column name="r_0_peak_reg_V_read_1_reg_619">19, 0, 19, 0</column>
+<column name="r_0_peak_reg_V_read_1_reg_619_pp0_iter1_reg">19, 0, 19, 0</column>
+<column name="r_0_shift_reg_V_rea_reg_631">18, 0, 18, 0</column>
+<column name="tmp_15_reg_653">18, 0, 18, 0</column>
+<column name="tmp_17_reg_658">18, 0, 18, 0</column>
+<column name="tmp_18_1_reg_647">16, 0, 16, 0</column>
+<column name="tmp_2_reg_663">1, 0, 1, 0</column>
+<column name="tmp_4_reg_668">1, 0, 1, 0</column>
+<column name="tmp_4_reg_668_pp0_iter1_reg">1, 0, 1, 0</column>
+<column name="tmp_578_reg_637">19, 0, 19, 0</column>
+<column name="tmp_6_reg_678">16, 0, 16, 0</column>
+<column name="tmp_6_reg_678_pp0_iter1_reg">16, 0, 16, 0</column>
+</table>
+</item>
+</section>
+</item>
+</section>
+
+<section name = "Interface" level="0">
+<item name = "Summary"><table name="" hasTotal="0">
+<keys size="6">RTL Ports, Dir, Bits, Protocol, Source Object, C Type</keys>
+<column name="ap_clk">in, 1, ap_ctrl_hs, TPG, return value</column>
+<column name="ap_rst">in, 1, ap_ctrl_hs, TPG, return value</column>
+<column name="ap_start">in, 1, ap_ctrl_hs, TPG, return value</column>
+<column name="ap_done">out, 1, ap_ctrl_hs, TPG, return value</column>
+<column name="ap_idle">out, 1, ap_ctrl_hs, TPG, return value</column>
+<column name="ap_ready">out, 1, ap_ctrl_hs, TPG, return value</column>
+<column name="ap_ce">in, 1, ap_ctrl_hs, TPG, return value</column>
+<column name="ap_return_0">out, 16, ap_ctrl_hs, TPG, return value</column>
+<column name="ap_return_1">out, 19, ap_ctrl_hs, TPG, return value</column>
+<column name="ap_return_2">out, 19, ap_ctrl_hs, TPG, return value</column>
+<column name="data_int_V">in, 14, ap_none, data_int_V, scalar</column>
+<column name="lincoeff_V">in, 24, ap_none, lincoeff_V, scalar</column>
+<column name="r_0_shift_reg_V_i">in, 18, ap_ovld, r_0_shift_reg_V, pointer</column>
+<column name="r_0_shift_reg_V_o">out, 18, ap_ovld, r_0_shift_reg_V, pointer</column>
+<column name="r_0_shift_reg_V_o_ap_vld">out, 1, ap_ovld, r_0_shift_reg_V, pointer</column>
+<column name="r_1_shift_reg_V_i">in, 18, ap_ovld, r_1_shift_reg_V, pointer</column>
+<column name="r_1_shift_reg_V_o">out, 18, ap_ovld, r_1_shift_reg_V, pointer</column>
+<column name="r_1_shift_reg_V_o_ap_vld">out, 1, ap_ovld, r_1_shift_reg_V, pointer</column>
+<column name="r_2_shift_reg_V_i">in, 18, ap_ovld, r_2_shift_reg_V, pointer</column>
+<column name="r_2_shift_reg_V_o">out, 18, ap_ovld, r_2_shift_reg_V, pointer</column>
+<column name="r_2_shift_reg_V_o_ap_vld">out, 1, ap_ovld, r_2_shift_reg_V, pointer</column>
+<column name="r_3_shift_reg_V_i">in, 18, ap_ovld, r_3_shift_reg_V, pointer</column>
+<column name="r_3_shift_reg_V_o">out, 18, ap_ovld, r_3_shift_reg_V, pointer</column>
+<column name="r_3_shift_reg_V_o_ap_vld">out, 1, ap_ovld, r_3_shift_reg_V, pointer</column>
+<column name="r_0_peak_reg_V_read">in, 19, ap_none, r_0_peak_reg_V_read, scalar</column>
+<column name="r_1_peak_reg_V_read">in, 19, ap_none, r_1_peak_reg_V_read, scalar</column>
+</table>
+</item>
+</section>
+</profile>

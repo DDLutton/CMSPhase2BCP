@@ -1,0 +1,47 @@
+<AutoPilot:ProjectResources xmlns:AutoPilot="com.autoesl.autopilot.ui.directiveView">
+<sourceFile name="">
+<directive functionLabel="" functionName="algo_unpacked" label="">
+<pragma name="ARRAY_PARTITION">
+<option name="variable" positionalBoolean="4" value="link_in"/>
+<option name="complete" positionalBoolean="type" value=""/>
+<option name="dim" value="0"/>
+</pragma>
+</directive>
+<directive functionLabel="" functionName="algo_unpacked" label="">
+<pragma name="ARRAY_PARTITION">
+<option name="variable" positionalBoolean="4" value="link_out"/>
+<option name="complete" positionalBoolean="type" value=""/>
+<option name="dim" value="0"/>
+</pragma>
+</directive>
+<directive functionLabel="" functionName="algo_unpacked" label="">
+<pragma name="PIPELINE">
+<option name="II" value="3"/>
+</pragma>
+</directive>
+<directive functionLabel="" functionName="algo_unpacked" label="">
+<pragma name="INTERFACE">
+<option name="ap_ctrl_hs" positionalBoolean="mode" value=""/>
+<option name="port" positionalBoolean="4" value="return"/>
+</pragma>
+</directive>
+<directive functionLabel="" functionName="algo_unpacked" label="">
+<pragma name="LATENCY">
+<option name="min" value="3"/>
+</pragma>
+</directive>
+<directive functionLabel="" functionName="algo_unpacked" label="">
+<pragma name="ARRAY_PARTITION">
+<option name="variable" positionalBoolean="4" value="reg"/>
+<option name="complete" positionalBoolean="type" value=""/>
+<option name="dim" value="0"/>
+</pragma>
+</directive>
+<directive functionLabel="" functionName="algo_unpacked" label="">
+<pragma name="UNROLL"/>
+</directive>
+<directive functionLabel="" functionName="algo_unpacked" label="">
+<pragma name="UNROLL"/>
+</directive>
+</sourceFile>
+</AutoPilot:ProjectResources>
