@@ -56,7 +56,9 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   //so if the if statement here is true for that it should also be true for (lincoeff & 0XFF0000) as is.
   //But maybe a shift is faster than reading through all those zeroes.
   //NOTE12: an interesting test might be changing this and seeing how the solution in Vivado changes.
-  if (((lincoeff & 0XFF0000) >> 16) == 0) coeff = 0; //Linearization Coefficients 
+  //RESULT: no change that i can see. commenting out bit shifted version as seems unnecessary
+  //if (((lincoeff & 0XFF0000) >> 16) == 0) coeff = 0; //Linearization Coefficients 
+  if ((lincoeff & 0XFF0000) == 0) coeff = 0; //Linearization Coefficients 
   else coeff = lincoeff;
   //So the base level is set by these coefficients, and this is what will be subtracted off the ADC.
   //The hex value here corresponds to 111111111111, so the first 12 bits is the pedestal.
@@ -92,14 +94,19 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   //if it is positive or negative), and because linearizerOutput is an unsigned 18 bit number, the most significant
   //three bits are cut off during its assignment. For a positive number this is basically like just removing
   //the two lsb and the msb.
-  linearizerOutput = (correctedADC * mult) >> 2; //Linearization Step Output
+  //linearizerOutput = (correctedADC * mult) >> 2; //Linearization Step Output
   //In this case, if cADC is negative, linearizerOutput becomes the shiftlin variable but shifted by 12 to the left.
   //From what I understand about bit shifting, this should lose the 12 msb of shiftlin, which, since it is 4 bits
   //total, is all of its information and it should become just 0.
   //NOTE14: don't know why this isn't just set to 0 if that's the case. Maybe set to zero.
+  //RESULT: no change as far as i can tell, just setting to zero.
   //NOTE15: not sure why this isn't an if - else thing w/ lO above
-  if (correctedADC < 0) linearizerOutput = shiftlin << 12; 
-
+  //if (correctedADC < 0) linearizerOutput = shiftlin << 12; 
+  //RESULT: no change as far as i can tell, just changing to if else
+  if (correctedADC < 0) linearizerOutput = 0; 
+  else{
+    linearizerOutput = (correctedADC * mult) >> 2; //Linearization Step Output
+  }
   // Amplitude Filter
   // 4 Stage TAP
   //So we now set some m (18bit unsigned) equal to this number in the shift register
@@ -118,6 +125,10 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
 //But maybe if these are all run in parallel they are done at the same time kind of before
 //being updated?
 //NOTE16: Try commenting this out for testing
+//RESULT: when commented out the latency min/max increased by 2, the interval min/max increased by 1, but
+//the timing did not change. 4 less BRAMs were needed, 88 less DSP48Es were needed, 39789 more flip flops
+//were needed, and 10126 less LUTs were needed. (note that this is with changes made previous so included the 24
+//extra flip flops from before). Keeping as is for now
 #pragma HLS dependence variable=r.shift_reg inter false
     r.shift_reg[j] = r.shift_reg[j-1];
   }
@@ -133,7 +144,8 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   mul = pro >> shiftfilter;
   //acc is a signed 19 bit number
   //Note that this has a small overflow problem because acc+mul returns a 20 bit number
-  //but probably not a problem given how much shiftfilter should reduce mul from its msb.
+  //but probably not a big deal. I think the overflow just cuts the msb off
+  //NOTE17: ask prasanna about this
   acc = acc + mul;
   //Then it goes over the shift filter applying the weights, performing the shift, and adding up the results.
   //This is essentially checking the linearizerOutputs of each group of 5 incoming points
@@ -154,16 +166,17 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   //you could get that m!=0 before the first 0 you want to actually count from.
   //Potential fix by just checking if each previous value in the shiftreg is 0
   //unless we expected some bumpiness?
-  //NOTE17: look into this
+  //NOTE18: look into this
   if (filterOutput < 0 or m==0) filterOutput = 0;
   //If it's greater than this big amount it's set to that big amount.
   //I'm not even sure this should be possible since it's a 19 bit signed number
   //and above we already set it to zero if it's negative so that last bit shouldn't even be
   //in use theoretically.
-  //NOTE18: try disabling in testing.
+  //NOTE19: try disabling in testing.
+  //RESULT: no noticeable change. Commenting out.
   //Could also potentially make filterOutput a little smaller, since the returned peak is actually a max of
   //3FF, but maybe it's good to have this precision for the actual checking.
-  if (filterOutput > 0X3FFFF) filterOutput = 0X3FFFF;
+  //if (filterOutput > 0X3FFFF) filterOutput = 0X3FFFF;
 
   // Peak Finder
   //So now switching to the peak_reg of the register. First it checks if peak_reg is greater than the filterOutput (min 0)
@@ -175,21 +188,30 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
     //and if it is we set it equal to that big number.
     //One thing I just realized is that peak_reg is a signed 19 bit variable but it should never be negative,
     //since it gets its values from filterOutput and that is set to zero if it's negative.
-    //NOTE19: try changing peak_reg to an unsigned variable
+    //NOTE20: try changing peak_reg to an unsigned variable
+    //RESULT: No timing change, required 6016 less flipflops and 4752 less LUTs. Keeping the change.
     //The reason it's set to this number specifically before bit shifting is that it will make that by-two bit shift
     //into 3FF, which is ten 1's. However, couldn't this be made slightly better with an if/else?
     //since if you just set ampPeak=3FF and do no bit shifting then you're good.
-    ampPeak = r.peak_reg[0];
-    if (ampPeak > 0XFFF){
+    if (r.peak_reg[0]> 0XFFF){
+      tmpPeak = 0X03FF;
+    }
+    else{
+      tmpPeak = r.peak_reg[0] >> 2;
+    }
+   /* if (ampPeak > 0XFFF){
       ampPeak = 0XFFF;
     }
     //So then we shift it by two. Because ampPeak shouldn't be negative it follows that you shouldn't have
     //weird conversion issues w/ tempPeak. So you should never run that if
-    //NOTE20: try removing the if in testing.
+    //NOTE21: try removing the if in testing.
+    //RESULT: No timing difference. Strangely enough seems to have reduced the LUT gain above from 4752 to 2288
+    //rejecting change. Maybe look at again later
     tmpPeak = ampPeak >> 2;
     if (tmpPeak > 0X3FF){
       tmpPeak = 0X03FF;
     }
+    */
   }
   //Then the second index is set to the value of the first, and the first gets the new filterOutput value
   r.peak_reg[1] = r.peak_reg[0];

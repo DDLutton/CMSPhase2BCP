@@ -152,10 +152,10 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 			//This is the actual linearization, FIL, and Peakfinder bit
 			output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
 		}
+		*/
 		//After filling up output_word w/ the results of TPG, we throw it to link_out.
 		//Probably optimized in the system anyway, but why not just have link_out in the place of output_word
 		link_out[lnk]=output_word;
-	*/
 	}
 	//Seems to be just a test, giving out the first shift values and the first peak values in the reg.
 	cout << "shift " << reg[0][1].shift_reg[0] << " " << reg[0][1].shift_reg[1] << " " << reg[0][1].shift_reg[2] << " " << reg[0][1].shift_reg[3] << endl;

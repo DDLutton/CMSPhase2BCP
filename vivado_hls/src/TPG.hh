@@ -46,7 +46,7 @@
 
 struct registers {
   uint18_t shift_reg[4]; //4-stage Shift Register for Amplitude Filter
-  int19_t peak_reg[2]; //2-stage Shift Register for Peak Finder
+  uint18_t peak_reg[2]; //2-stage Shift Register for Peak Finder
 };
 
 //void TPG(inPut in[NXtl], outPut out[NXtl]);
