@@ -193,13 +193,16 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
     //The reason it's set to this number specifically before bit shifting is that it will make that by-two bit shift
     //into 3FF, which is ten 1's. However, couldn't this be made slightly better with an if/else?
     //since if you just set ampPeak=3FF and do no bit shifting then you're good.
+    /*
     if (r.peak_reg[0]> 0XFFF){
       tmpPeak = 0X03FF;
     }
     else{
       tmpPeak = r.peak_reg[0] >> 2;
     }
-   /* if (ampPeak > 0XFFF){
+    */
+   ampPeak = r.peak_reg[0];
+   if (ampPeak > 0XFFF){
       ampPeak = 0XFFF;
     }
     //So then we shift it by two. Because ampPeak shouldn't be negative it follows that you shouldn't have
@@ -211,7 +214,7 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
     if (tmpPeak > 0X3FF){
       tmpPeak = 0X03FF;
     }
-    */
+    
   }
   //Then the second index is set to the value of the first, and the first gets the new filterOutput value
   r.peak_reg[1] = r.peak_reg[0];
