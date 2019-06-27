@@ -101,7 +101,6 @@ int main(int argc, char ** argv) {
 
 		if  (ifs.eof())
 			break;
-			uint a;
 
 
 		//cout << "link_in" << link_in[0].range(63, 0) << endl;
