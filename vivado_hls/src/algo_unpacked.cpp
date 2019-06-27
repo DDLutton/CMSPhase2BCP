@@ -16,10 +16,9 @@ using namespace std;
 //#include "../src/algo_unpacked.h"
 #include "TPG.hh"
 #include "../data/LUT.h"
-//NOTE2: this may or may not be true. From what I gathered from speaking to Prasanna, it seems like
+//NOTEB3: this may or may not be true. From what I gathered from speaking to Prasanna, it seems like
 //the 48-63 range is what we want to avoid.
 const int NCrystalsPerLink = 11; // Bits 16-31, 32-47, ..., 176-191, keeping range(15, 0) unused
-//Note3: N.B. means "note well" or something in Latin, so, you know, "note well".
  /*
   * algo_unpacked interface exposes fully unpacked input and output link data.
   * This version assumes use of 10G 8b10b links, and thus providing 192bits/BX/link.
@@ -38,92 +37,39 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 // !!! Retain these 4 #pragma directives below in your algo_unpacked implementation !!!
 //ARRAY_PARTITION basically takes regular arrays and turns them into just
 //a bunch of individual variables of the type that the array is holding.
-//This is doing it to the link_in and link_out variables, which are essentially the arrays that hold the input
-//and output data
 #pragma HLS ARRAY_PARTITION variable=link_in complete dim=0
 #pragma HLS ARRAY_PARTITION variable=link_out complete dim=0
 //Pipeline basically allows the system to process new input while other input is being worked on
-//instead of waiting for the last input to finish. This reduces the number of clock cycles it takes for
-//some amount of input to be processed.
+//instead of waiting for the last input to finish.
 //The 3 here means that it can process new input every 3 clock cycles. I'm not sure exactly why this is the case
-//instead of 1, but I guess it could either be concerns about using up too many resources
-//on the FPGA, or potentially there is a bottleneck that makes going below 3 unhelpful,
-//though I'm not sure exactly what form that would take.
+//instead of 1.
+//NOTEB4: Try with 1 or ask Prasanna why 1.
 #pragma HLS PIPELINE II=3
 //INTERFACE seems kinda complicated, and essentially has to do with the input and output protocols of functions.
 //In this case, ap_ctrl_hs means that a set of "control ports" that tell the function to "start", and say when it's "idle",
 //"done", and "ready" for new data.
-//The "port" specifies which part of the function this pragma applies to. In this case it applies to the, I assume,
-//returning of the output data. I'm a little confused by the fact that this function doesn't return anything.
-//But rather seems to work by changing the link_out array which doesn't require a return.
-//However, I see this being used elsewhere with void functions so I really don't know now.
-//NOTE4: figure this out
+//NOTEB5: Figure out the meaning of "return"
 #pragma HLS INTERFACE ap_ctrl_hs port=return
    
 // null algo specific pragma: avoid fully combinatorial algo by specifying min latency
 // otherwise algorithm clock input (ap_clk) gets optimized away
 //So setting a latency min is pretty much what it sounds like. For this algo_unpacked function the minimum
-//number of clock cycles it is allowed to take is 3. The reason is given above, but I'm not sure exactly
-//why it's a bad thing for that bit to get optimized away. Maybe it makes the thing not work?
-//Additionally, I read that this can be used to speed up how fast the synthesis goes for a given solution,
-//since it can ignore possibilities with latency above/below the max/min.
+//number of clock cycles it is allowed to take is 3. The reason is given above, but I'm not sure exactly what it means.
+//NOTEB6: Try disabling or ask Prasanna why 3.
 #pragma HLS latency min=3
-	//The "registers" is a struct defined in TPG.hh which is composed of an array (size 4) of 18 bit unsigned ints
-	//and an array (size 2) of 19 bit signed ints
-	//so each element of the array can have two signed ints and 4 unsigned ints.
-	//Here we have a big 2D array of registers, whose size is dependent on the number of channels
-	//and the number of crystals
+
 	//Very important to note that this is specifically a "static" variable. This means if you, for instance
 	//call algo_unpacked twice, it will keep the values it had in it from last time.
-	//NOTE5: try initializing it all to zero so that maybe the program wont spit out a billion warnings
     static registers reg[N_CH_IN][NCrystalsPerLink];
-//Array partition stuff same as before.
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
-	//Looping over each link in the incoming data. Here it is 48 links.
-	//NOTE25: why is this an int instead of a uint?
-	//RESULT: (done with notes 26-32). No change. Keeping it like this
+
 	for (uint8_t lnk = 0; lnk < N_CH_IN; lnk++) {
 //The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
 #pragma HLS UNROLL
 		ap_uint<192> output_word;
-		//NOTE6: very important. Because of how the links are composed where the first four hex numbers
-		//(reading left to right) are the metadata we want to avoid, they will *not* be the first 16 bits
-		//of link_in[lnk]. In fact, they will be the last 16 of the line they're on, so we should instead be avoiding
-		//bits 48-63.
+		//NOTEB7: I've changed this to avoid bits 48-63 instead of 0-15. Figure out if this is correct from Prasanna.
 		output_word.range(63,48)=link_in[lnk].range(63,48);
-		//Then looping over each crystal contained in the link.
-		/*
-		for (int8_t i = 0; i < 3; i++){
-//The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
-#pragma HLS UNROLL
-			//Getting the bit positions and range of specifically the crystal inputs, *not* the metadata from the links
-			//bitLo is moved forward 16 bits (4 hex) because the first 16 bits is metadata
-			//Then the rest of the digi input is 14 bits 
-			//NOTE7: I still don't fully understand what happens w/ the last 2 bits.
-			//NOTE8: Not sure why these are specifically shorts. They go up to,at most (NCrystalsPerLink*16)+15
-			//which at current is like 8 bits so I dunno.
-			//NOTE9: as mentioned above, we don't want to avoid the first 16 bits, instead the bits 48-63
-			//so I've modified the code to do this
-			short bitLo = i*16;
-			short bitHi_in = bitLo+13; // digi inputs are 14 bits
-			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
-			//The coeff array is defined in LUT.h, and essentially contains the 8 bit base level response (pedestal);
-			//the 4 bit shift value; and the 8 bit
-			uint24_t mycoeff = coeff[lnk*10+j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
-			//cout << "Input " << link_in[lnk].range(bitHi_in, bitLo) << " " << mycoeff << endl;
-			//Note, the .range() method on ap_int operators specifically deals with bits.
-			//This is the actual linearization, FIL, and Peakfinder bit
-			output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
-		}
-		*/
-		//Because we need to skip the 4th set of data in link_in I am utilizing two for loops.
-		//For what I can tell this adds 24 flip flops from the original solution, but doesn't seem
-		//to change much else.
-		//NOTE10: if statement version:
-		//NOTE26: again why are the loop variables ints instead of uints?
-		//RESULT: (done with notes 25,27-32). No change. Keeping it like this
 		for (uint8_t i = 0; i <= NCrystalsPerLink; i++){
-//The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
 #pragma HLS UNROLL
 			if (i==3){
 				continue;
@@ -131,23 +77,8 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 			short bitLo = i*16;
 			short bitHi_in = bitLo+13; // digi inputs are 14 bits
 			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
-			//NOTE24: reading in the coeffs seems to take a lil. they are currently formatted such that
-			//there is a group of 4 then a group of 6 then a group of 4, etc, etc.
-			//so the indexes are given here:
-			//https://oeis.org/search?q=0%2C4%2C10%2C14%2C20%2C24&language=english&go=Search
-			//(-1+(-1)^n+10*n)/2
-			//or by subtracting 1 from:
-			//https://oeis.org/search?q=1%2C5%2C11%2C15%2C21%2C25%2C31%2C35%2C41%2C45%2C51%2C55%2C61%2C65&sort=&language=english&go=Search	
-			//Best way to implement this I could think of is below:
-			/* uint indexer = (lnk*10+j)
-			uint24_t mycoeff = coeff[(2*(indexer/10))+((indexer % 10) >> 2)-((indexer % 10) >> 3)];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
-			*/
-		    //RESULT: Note this was done after notes 25-35. Very very bad. Takes forever to
-			//do the calculations necessary
 			uint24_t mycoeff = coeff[lnk*10+j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
 			//cout << "Input " << link_in[lnk].range(bitHi_in, bitLo) << " " << mycoeff << endl;
-			//RESULT: Note this was done after notes 25-35. Really really bad. Ruined everything because
-			//the calculations are just so much worse than the memory to hold the extra values etc.
 			if (i>3){
 				output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i-1]);
 			}
@@ -155,25 +86,7 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 				output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
 			}
 		} 
-		//If statement version adds also 24 flip flops so probably like exactly the same thing
-		/*
-		for (int8_t i = 3; i < NCrystalsPerLink; i++){
-//The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
-#pragma HLS UNROLL
-			short bitLo = (i+1)*16;
-			short bitHi_in = bitLo+13; // digi inputs are 14 bits
-			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
-			//The coeff array is defined in LUT.h, and essentially contains the 8 bit base level response (pedestal);
-			//the 4 bit shift value; and the 8 bit
-			uint24_t mycoeff = coeff[lnk*10+j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
-			//cout << "Input " << link_in[lnk].range(bitHi_in, bitLo) << " " << mycoeff << endl;
-			//Note, the .range() method on ap_int operators specifically deals with bits.
-			//This is the actual linearization, FIL, and Peakfinder bit
-			output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
-		}
-		*/
-		//After filling up output_word w/ the results of TPG, we throw it to link_out.
-		//Probably optimized in the system anyway, but why not just have link_out in the place of output_word
+		//NOTEB8: Why not just set link_out above insetad of this middleword stuff?
 		link_out[lnk]=output_word;
 	}
 	//Seems to be just a test, giving out the first shift values and the first peak values in the reg.
