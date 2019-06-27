@@ -19,6 +19,7 @@
 #define int19_t ap_int<19>
 #define int21_t ap_int<21>
 #define int25_t ap_int<25>
+#define int3_t ap_int<3>
 #else
 #define uint4_t uint8_t
 #define uint12_t uint16_t

@@ -80,7 +80,9 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 //Array partition stuff same as before.
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
 	//Looping over each link in the incoming data. Here it is 48 links.
-	for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {
+	//NOTE25: why is this an int instead of a uint?
+	//RESULT: (done with notes 26-32). No change. Keeping it like this
+	for (uint8_t lnk = 0; lnk < N_CH_IN; lnk++) {
 //The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
 #pragma HLS UNROLL
 		ap_uint<192> output_word;
@@ -118,7 +120,9 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 		//For what I can tell this adds 24 flip flops from the original solution, but doesn't seem
 		//to change much else.
 		//NOTE10: if statement version:
-		for (int8_t i = 0; i <= NCrystalsPerLink; i++){
+		//NOTE26: again why are the loop variables ints instead of uints?
+		//RESULT: (done with notes 25,27-32). No change. Keeping it like this
+		for (uint8_t i = 0; i <= NCrystalsPerLink; i++){
 //The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
 #pragma HLS UNROLL
 			if (i==3){
@@ -127,8 +131,23 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 			short bitLo = i*16;
 			short bitHi_in = bitLo+13; // digi inputs are 14 bits
 			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
+			//NOTE24: reading in the coeffs seems to take a lil. they are currently formatted such that
+			//there is a group of 4 then a group of 6 then a group of 4, etc, etc.
+			//so the indexes are given here:
+			//https://oeis.org/search?q=0%2C4%2C10%2C14%2C20%2C24&language=english&go=Search
+			//(-1+(-1)^n+10*n)/2
+			//or by subtracting 1 from:
+			//https://oeis.org/search?q=1%2C5%2C11%2C15%2C21%2C25%2C31%2C35%2C41%2C45%2C51%2C55%2C61%2C65&sort=&language=english&go=Search	
+			//Best way to implement this I could think of is below:
+			/* uint indexer = (lnk*10+j)
+			uint24_t mycoeff = coeff[(2*(indexer/10))+((indexer % 10) >> 2)-((indexer % 10) >> 3)];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
+			*/
+		    //RESULT: Note this was done after notes 25-35. Very very bad. Takes forever to
+			//do the calculations necessary
 			uint24_t mycoeff = coeff[lnk*10+j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
 			//cout << "Input " << link_in[lnk].range(bitHi_in, bitLo) << " " << mycoeff << endl;
+			//RESULT: Note this was done after notes 25-35. Really really bad. Ruined everything because
+			//the calculations are just so much worse than the memory to hold the extra values etc.
 			if (i>3){
 				output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i-1]);
 			}

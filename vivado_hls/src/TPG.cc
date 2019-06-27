@@ -22,7 +22,13 @@ Rslt = Val2 >> 4; //Yields: 0x1ffc, sign is maintained and extended
 //There is a point in the following code where I can't tell if this behavior is anticipated,
 //and I will note it
 uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
-  int8_t j;
+  //NOTE32: why not uint?
+	//RESULT: (attemped with notes 25-31) doesn't seem to like when this variable
+  //is made into uint. the csim was taking a long time to generate. guessing this has something
+  //to do with the fact it's iterated downwards. keeping as int
+  //NOTE33: Why is this variable not just declared at the for loops?
+  //RESULT: No change. Keeping it this way
+  //int8_t j;
   int13_t correctedADC = 0;
   uint12_t uncorrectedADC = 0;
   uint18_t linearizerOutput = 0;
@@ -38,7 +44,9 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   int25_t pro = 0;
   int19_t acc = 0;
   int7_t weight[5] = {24, 31, 16, -35, -36}; //Filter Weights
-  int19_t ampPeak = 0;
+  //Note34: don't need this variable anymore
+  //Result:No change. Keeping it this way.
+  //uint18_t ampPeak = 0;
   uint16_t tmpPeak = 0X0000;
 
   // Linearizer
@@ -115,7 +123,9 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   m = r.shift_reg[3];
   //So this loop moves the everything in the 2-0 indices in r.shift_reg to the respective
   //3-1 indices.
-  for (j = 3; j >= 1; j--){
+  //NOTE35: Why not int3_t?
+  //RESULT: no change. keeping it this way.
+  for (int3_t j = 3; j >= 1; j--){
 //The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
 #pragma HLS UNROLL
 //The dependence pragma is essentially a way to tell HLS about variable dependence in the loop. Typically
@@ -150,7 +160,7 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   //Then it goes over the shift filter applying the weights, performing the shift, and adding up the results.
   //This is essentially checking the linearizerOutputs of each group of 5 incoming points
   //and adding them up with weights.
-  for (j = 3; j >= 0; j--){
+  for (int8_t j = 3; j >= 0; j--){
 //The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
 #pragma HLS UNROLL
     pro = r.shift_reg[j]*weight[j];
@@ -201,16 +211,22 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
       tmpPeak = r.peak_reg[0] >> 2;
     }
     */
-   ampPeak = r.peak_reg[0];
+   /*ampPeak = r.peak_reg[0];
    if (ampPeak > 0XFFF){
       ampPeak = 0XFFF;
     }
+    */
     //So then we shift it by two. Because ampPeak shouldn't be negative it follows that you shouldn't have
     //weird conversion issues w/ tempPeak. So you should never run that if
     //NOTE21: try removing the if in testing.
     //RESULT: No timing difference. Strangely enough seems to have reduced the LUT gain above from 4752 to 2288
     //rejecting change. Maybe look at again later
-    tmpPeak = ampPeak >> 2;
+    //NOTE22: just realized I forgot to change ampPeak to uint18 so doing that now
+    //RESULT: flip flops use 96662 and LUTs 104468 so no actual change
+    //resulting from this. Keeping it anyway.
+    //NOTE23: Maybe try setting tmpPeak to r.peak with the shift, and *then* doing the below if.
+    //RESULT: no change. keeping this way of doing it
+    tmpPeak = r.peak_reg[0] >> 2;
     if (tmpPeak > 0X3FF){
       tmpPeak = 0X03FF;
     }
