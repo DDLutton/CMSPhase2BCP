@@ -16,8 +16,6 @@ using namespace std;
 //#include "../src/algo_unpacked.h"
 #include "TPG.hh"
 #include "../data/LUT.h"
-//NOTEB3: this may or may not be true. From what I gathered from speaking to Prasanna, it seems like
-//the 48-63 range is what we want to avoid.
 const int NCrystalsPerLink = 11; // Bits 16-31, 32-47, ..., 176-191, keeping range(15, 0) unused
  /*
   * algo_unpacked interface exposes fully unpacked input and output link data.
@@ -67,25 +65,17 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 //The UNROLL pragma essentially splits up the loop so that different iterations can be run in parallel.
 #pragma HLS UNROLL
 		ap_uint<192> output_word;
-		//NOTEB7: I've changed this to avoid bits 48-63 instead of 0-15. Figure out if this is correct from Prasanna.
-		output_word.range(63,48)=link_in[lnk].range(63,48);
-		for (uint8_t i = 0; i <= NCrystalsPerLink; i++){
+		output_word.range(15,0)=link_in[lnk].range(15,0);
+
+		for (int8_t i = 0; i < NCrystalsPerLink; i++){
 #pragma HLS UNROLL
-			if (i==3){
-				continue;
-			}
-			short bitLo = i*16;
+			short bitLo = (1+i)*16;
 			short bitHi_in = bitLo+13; // digi inputs are 14 bits
 			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
 			uint24_t mycoeff = coeff[lnk*10+j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
 			//cout << "Input " << link_in[lnk].range(bitHi_in, bitLo) << " " << mycoeff << endl;
-			if (i>3){
-				output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i-1]);
-			}
-			else {
-				output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
-			}
-		} 
+			output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
+		}
 		//NOTEB8: Why not just set link_out above insetad of this middleword stuff?
 		link_out[lnk]=output_word;
 	}

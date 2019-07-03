@@ -50,14 +50,9 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   m = r.shift_reg[3];
   //So this loop moves the everything in the 2-0 indices in r.shift_reg to the respective
   //3-1 indices.
-  for (int3_t j = 3; j >= 1; j--){
-#pragma HLS UNROLL
-//The dependence pragma is essentially a way to tell HLS about variable dependence in the loop. Typically
-//vivado will work this out for itself, but you can specificy variables to either remove or enforce dependence
-//NOTEB10: The dependence here seems true to me. Ask Prasanna about it.
-#pragma HLS dependence variable=r.shift_reg inter false
-    r.shift_reg[j] = r.shift_reg[j-1];
-  }
+  r.shift_reg[3] = r.shift_reg[2];
+  r.shift_reg[2] = r.shift_reg[1];
+  r.shift_reg[1] = r.shift_reg[0]];
 
   r.shift_reg[0] = linearizerOutput;
 
