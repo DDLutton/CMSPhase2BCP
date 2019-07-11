@@ -1,0 +1,29 @@
+INFO: [SIM 2] *************** CSIM start ***************
+INFO: [SIM 4] CSIM will launch GCC as the compiler.
+   Compiling ../../../../src/algo_unpacked_DC_NojR_tb.cpp in debug mode
+   Compiling ../../../../src/TPG.cc in debug mode
+   Compiling ../../../../src/algo_unpacked_DC_NojR.cpp in debug mode
+   Generating csim.exe
+shift 112 0 0 0
+peak 0 0
+shift 109 112 0 0
+peak 0 0
+shift 110 109 112 0
+peak 0 0
+shift 244 110 109 112
+peak 109 0
+shift 10948 244 110 109
+peak 4127 109
+shift 14641 10948 244 110
+peak 10730 4127
+shift 13061 14641 10948 244
+peak 14529 10730
+shift 9965 13061 14641 10948
+peak 7596 14529
+shift 7062 9965 13061 14641
+peak 0 7596
+shift 4805 7062 9965 13061
+peak 0 0
+*** Output data verification. PASSED ***
+INFO: [SIM 1] CSim done with 0 errors.
+INFO: [SIM 3] *************** CSIM finish ***************
