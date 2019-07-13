@@ -6,14 +6,13 @@
 using namespace std;
 
 uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
-  int8_t j;
   int13_t correctedADC = 0;
   uint12_t uncorrectedADC = 0;
   uint18_t linearizerOutput = 0;
   uint12_t base = 0;
   uint24_t coeff = 0;
   uint4_t shiftlin = 0;
-  uint8_t mult = 0;
+  ap_int<8> mult = 0;
   int21_t prod = 0;
   int19_t filterOutput = 0;
   uint4_t shiftfilter = 6;
