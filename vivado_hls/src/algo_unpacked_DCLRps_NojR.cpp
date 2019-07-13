@@ -56,7 +56,7 @@ void algo_unpacked_DCLRps_NojR(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_
 			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
 			output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
 		}
-		if 
+		
 		output_word.range(23,0) = mycoeff;
 		output_word.range(63,48) = link_in[lnk].range(47, 32);
 		output_word.range(81,64) = reg[lnk][1].shift_reg[0];
