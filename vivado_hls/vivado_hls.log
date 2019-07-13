@@ -6,19 +6,19 @@
 
 source /data/tools/Xilinx/Vivado/2018.2/scripts/vivado_hls/hls.tcl -notrace
 INFO: [HLS 200-10] Running '/data/tools/Xilinx/Vivado/2018.2/bin/unwrapped/lnx64.o/vivado_hls'
-INFO: [HLS 200-10] For user 'dlutton' on host 'uwlogin.cern.ch' (Linux_x86_64 version 3.10.0-957.12.2.el7.x86_64) on Wed Jul 10 19:18:06 EDT 2019
+INFO: [HLS 200-10] For user 'dlutton' on host 'uwlogin.cern.ch' (Linux_x86_64 version 3.10.0-957.12.2.el7.x86_64) on Sat Jul 13 12:18:48 EDT 2019
 INFO: [HLS 200-10] On os "CentOS Linux release 7.6.1810 (Core) "
 INFO: [HLS 200-10] In directory '/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/firmwareTestCode/CMSPhase2BCP/vivado_hls'
 INFO: [HLS 200-10] Opening and resetting project '/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/firmwareTestCode/CMSPhase2BCP/vivado_hls/proj'.
 INFO: [HLS 200-10] Adding design file 'src/algo_unpacked_DC_NojR.cpp' to the project
 INFO: [HLS 200-10] Adding design file 'src/TPG.cc' to the project
 INFO: [HLS 200-10] Adding test bench file 'src/algo_unpacked_DC_NojR_tb.cpp' to the project
-INFO: [HLS 200-10] Adding test bench file 'data/test1_inp.txt' to the project
-INFO: [HLS 200-10] Adding test bench file 'data/test1_out_ref.txt' to the project
+WARNING: [HLS 200-40] Cannot find test bench file 'data/test1_inp.txt'
+WARNING: [HLS 200-40] Cannot find test bench file 'data/test1_out_ref.txt'
 INFO: [HLS 200-10] Adding test bench file 'data/test2_DC_NojR_inp.txt' to the project
 INFO: [HLS 200-10] Adding test bench file 'data/test2_DC_NojR_out_ref.txt' to the project
-INFO: [HLS 200-10] Adding test bench file 'data/rnd_inp.txt' to the project
-INFO: [HLS 200-10] Adding test bench file 'data/rnd_out_ref.txt' to the project
+WARNING: [HLS 200-40] Cannot find test bench file 'data/rnd_inp.txt'
+WARNING: [HLS 200-40] Cannot find test bench file 'data/rnd_out_ref.txt'
 INFO: [HLS 200-10] Opening and resetting solution '/afs/cern.ch/user/d/dlutton/dlutton/VHLS/centos/firmwareTestCode/CMSPhase2BCP/vivado_hls/proj/solution1'.
 INFO: [HLS 200-10] Cleaning up the solution database.
 INFO: [HLS 200-10] Setting target device to 'xc7vx690tffg1927-2'
@@ -53,5 +53,5 @@ peak 0 0
 *** Output data verification. PASSED ***
 INFO: [SIM 211-1] CSim done with 0 errors.
 INFO: [SIM 211-3] *************** CSIM finish ***************
-***** C SIMULATION COMPLETED IN 0h0m4s *****
-INFO: [Common 17-206] Exiting vivado_hls at Wed Jul 10 19:18:11 2019...
+***** C SIMULATION COMPLETED IN 0h0m6s *****
+INFO: [Common 17-206] Exiting vivado_hls at Sat Jul 13 12:18:56 2019...
