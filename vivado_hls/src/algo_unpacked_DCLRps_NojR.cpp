@@ -54,11 +54,11 @@ void algo_unpacked_DCLRps_NojR(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_
 			short bitLo = (1+i)*16;
 			short bitHi_in = bitLo+13; // digi inputs are 14 bits
 			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
-			output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i],&LPSReturn);
+			output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
 		}
 		if 
 		output_word.range(23,0) = mycoeff;
-		output_word.range(63,48) = link_in[lnk].range(47, 32)
+		output_word.range(63,48) = link_in[lnk].range(47, 32);
 		output_word.range(81,64) = reg[lnk][1].shift_reg[0];
 		output_word.range(101,84) = reg[lnk][1].shift_reg[1];
 		output_word.range(121,104) = reg[lnk][1].shift_reg[2];
@@ -68,8 +68,8 @@ void algo_unpacked_DCLRps_NojR(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_
 		link_out[lnk]=output_word;
 	}
 	#ifndef __SYNTHESIS__
-	#	cout << "shift " << reg[1][1].shift_reg[0] << " " << reg[1][1].shift_reg[1] << " " << reg[1][1].shift_reg[2] << " " << reg[1][1].shift_reg[3] << endl;
-	#	cout << "peak " << reg[1][1].peak_reg[0] << " " << reg[1][1].peak_reg[1] << endl;
+		cout << "shift " << reg[1][1].shift_reg[0] << " " << reg[1][1].shift_reg[1] << " " << reg[1][1].shift_reg[2] << " " << reg[1][1].shift_reg[3] << endl;
+		cout << "peak " << reg[1][1].peak_reg[0] << " " << reg[1][1].peak_reg[1] << endl;
 	#endif
 	// Comment the following not to overwrite the output
 	/*for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {
