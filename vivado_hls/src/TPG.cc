@@ -12,7 +12,7 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   uint12_t base = 0;
   uint24_t coeff = 0;
   uint4_t shiftlin = 0;
-  ap_int<8> mult = 0;
+  ap_uint<8> mult = 0;
   int21_t prod = 0;
   int19_t filterOutput = 0;
   uint4_t shiftfilter = 6;
