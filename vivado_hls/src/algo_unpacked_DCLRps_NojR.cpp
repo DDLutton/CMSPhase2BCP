@@ -45,6 +45,7 @@ void algo_unpacked_DCLRps_NojR(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_
         static registers reg[N_CH_IN][NCrystalsPerLink];
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
 		uint16_t j = link_in[0].range(15,0);
+		uint16_t skipOut;
 	for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {
 #pragma HLS UNROLL
 		ap_uint<192> output_word=0;
@@ -56,6 +57,11 @@ void algo_unpacked_DCLRps_NojR(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_
 			short bitLo = (1+i)*16;
 			short bitHi_in = bitLo+13; // digi inputs are 14 bits
 			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
+			//If added so that the output_word's link_in section above isn't overwritten
+			if (i == 3){
+				skipOut = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
+
+			}
 			output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
 		}
 		
