@@ -6,7 +6,7 @@ array set opt {
     synth  1
     cosim  1
     export 1
-    tv test2_DCLRps_NojR
+    tv test2_DCLRps_NojR_S
 }
 
 foreach arg $::argv {

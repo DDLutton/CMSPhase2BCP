@@ -8,7 +8,7 @@
 #include <iomanip>
 #include <string>
 
-#include "algo_unpacked_DCLRps_NojR.h"
+#include "algo_unpacked_DCLRps_NojR_S.h"
 
 using namespace std;
 
@@ -95,7 +95,7 @@ int main(int argc, char ** argv) {
 
 		//cout << "link_in" << link_in[0].range(63, 0) << endl;
 
-		algo_unpacked_DCLRps_NojR(link_in, link_out);
+		algo_unpacked_DCLRps_NojR_S(link_in, link_out);
 
 		wordCnt-=2;
 
