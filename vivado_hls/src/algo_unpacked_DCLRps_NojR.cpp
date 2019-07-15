@@ -48,7 +48,9 @@ void algo_unpacked_DCLRps_NojR(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_
 	for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {
 #pragma HLS UNROLL
 		ap_uint<192> output_word=0;
+		output_word.range(63,48) = link_in[lnk].range(47, 32);
 		uint24_t mycoeff = coeff[lnk*10+j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
+		output_word.range(23,0) = mycoeff;
 		for (int8_t i = 0; i < NCrystalsPerLink; i++){
 #pragma HLS UNROLL
 			short bitLo = (1+i)*16;
@@ -57,8 +59,6 @@ void algo_unpacked_DCLRps_NojR(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_
 			output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
 		}
 		
-		output_word.range(23,0) = mycoeff;
-		output_word.range(63,48) = link_in[lnk].range(47, 32);
 		output_word.range(81,64) = reg[lnk][1].shift_reg[0];
 		output_word.range(101,84) = reg[lnk][1].shift_reg[1];
 		output_word.range(121,104) = reg[lnk][1].shift_reg[2];
