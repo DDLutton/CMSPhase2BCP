@@ -50,7 +50,7 @@ void algo_unpacked_DCLRps_NojR_S(ap_uint<192> link_in[N_CH_IN], ap_uint<192> lin
         ap_uint<192> linkIn_Out=0;
         debug_Out.range(47,32) = j;
 
-		linkIn_Out = link_in[0]
+		linkIn_Out = link_in[0];
 		uint24_t mycoeff = coeff[j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
 		debug_Out.range(23,0) = mycoeff;
 		for (int8_t i = 0; i < NCrystalsPerLink; i++){
@@ -70,7 +70,7 @@ void algo_unpacked_DCLRps_NojR_S(ap_uint<192> link_in[N_CH_IN], ap_uint<192> lin
 		debug_Out.range(186,168) = reg[0][1].peak_reg[1];
 
 		link_out[0]=output_word;
-        link_out[1]=linkIn_Out
+        link_out[1]=linkIn_Out;
 		link_out[2]=debug_Out;
 
 		for (int8_t lnk = 3; lnk < N_CH_IN; lnk++) {
