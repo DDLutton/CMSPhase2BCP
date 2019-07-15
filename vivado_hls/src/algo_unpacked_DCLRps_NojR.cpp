@@ -58,7 +58,7 @@ void algo_unpacked_DCLRps_NojR(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_
 			short bitHi_in = bitLo+13; // digi inputs are 14 bits
 			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
 			//If added so that the output_word's link_in section above isn't overwritten
-			if (i == 3){
+			if (i == 0 || i == 2){
 				skipOut = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
 			}
 			else{
