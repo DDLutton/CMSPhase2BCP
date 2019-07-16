@@ -11,7 +11,7 @@
 using namespace std;
 
 //#include "algo_unpacked.h"   // This is where you should have had hls_algo - if not find the header file and fix this - please do not copy this file as that defines the interface
-#include "../src/algo_unpacked_DCLRps_NojR_S.h"
+#include "../src/algo_unpacked.h"
 #include "TPG.hh"
 #include "../data/LUT.h"
 
@@ -29,7 +29,7 @@ const int NCrystalsPerLink = 11; // Bits 16-31, 32-47, ..., 176-191, keeping ran
   * !!! N.B. 2: make sure to assign every bit of link_out[] data. First byte should be assigned zero.
   */
 
-void algo_unpacked_DCLRps_NojR_S(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT])
+void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT])
 {
 
 // !!! Retain these 4 #pragma directives below in your algo_unpacked implementation !!!
@@ -44,12 +44,11 @@ void algo_unpacked_DCLRps_NojR_S(ap_uint<192> link_in[N_CH_IN], ap_uint<192> lin
 
         static registers reg[N_CH_IN][NCrystalsPerLink];
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
-		uint16_t j = link_in[1].range(15,0);
+		static int j;
 		ap_uint<192> output_word=0;
 		ap_uint<192> debug_Out=0;
         ap_uint<192> linkIn_Out=0;
         debug_Out.range(47,32) = j;
-
 		linkIn_Out = link_in[0];
 		uint24_t mycoeff = coeff[j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
 		debug_Out.range(23,0) = mycoeff;
@@ -77,7 +76,7 @@ void algo_unpacked_DCLRps_NojR_S(ap_uint<192> link_in[N_CH_IN], ap_uint<192> lin
 #pragma HLS UNROLL
 			link_out[lnk]=0;
 	    }
-	
+	j+=1
 	#ifndef __SYNTHESIS__
 		cout << "shift " << reg[0][1].shift_reg[0] << " " << reg[0][1].shift_reg[1] << " " << reg[0][1].shift_reg[2] << " " << reg[0][1].shift_reg[3] << endl;
 		cout << "peak " << reg[0][1].peak_reg[0] << " " << reg[0][1].peak_reg[1] << endl;
