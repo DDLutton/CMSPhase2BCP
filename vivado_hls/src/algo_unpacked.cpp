@@ -39,6 +39,7 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 
 static registers reg[N_CH_IN][NCrystalsPerLink];
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
+static int j;
 
 link_out[0].range(15,0)=0;
 link_out[0].range(31, 16) = TPG(link_in[0].range(29, 16), coeff[(0*10)+j], reg[0][0]);
@@ -617,7 +618,7 @@ link_out[47].range(159, 144) = TPG(link_in[47].range(157, 144), coeff[(47*10)+j]
 link_out[47].range(175, 160) = TPG(link_in[47].range(173, 160), coeff[(47*10)+j], reg[47][9]);
 link_out[47].range(191, 176) = TPG(link_in[47].range(189, 176), coeff[(47*10)+j], reg[47][10]);
 
-
+j+= 1
 
 	#ifndef __SYNTHESIS__
 	cout << "shift " << reg[0][1].shift_reg[0] << " " << reg[0][1].shift_reg[1] << " " << reg[0][1].shift_reg[2] << " " << reg[0][1].shift_reg[3] << endl;
