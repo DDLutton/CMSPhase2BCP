@@ -9,13 +9,14 @@
 #include <string>
 
 using namespace std;
-//Not entirely sure what is happening here. In the current git commit the algo_unpacked.h file is in the same folder
-//as the TPG.hh file which is in the same folder as the algo_unpacked stuff (all in src)
-//What is hls_algo?
-#include "algo_unpacked.h"   // This is where you should have had hls_algo - if not find the header file and fix this - please do not copy this file as that defines the interface
-//#include "../src/algo_unpacked.h"
+
+//#include "algo_unpacked.h"   // This is where you should have had hls_algo - if not find the header file and fix this - please do not copy this file as that defines the interface
+#include "../src/algo_unpacked.h"
 #include "TPG.hh"
 #include "../data/LUT.h"
+
+const int NCrystalsPerLink = 11; // Bits 16-31, 32-47, ..., 176-191, keeping range(15, 0) unused
+
  /*
   * algo_unpacked interface exposes fully unpacked input and output link data.
   * This version assumes use of 10G 8b10b links, and thus providing 192bits/BX/link.
@@ -28,7 +29,7 @@ using namespace std;
   * !!! N.B. 2: make sure to assign every bit of link_out[] data. First byte should be assigned zero.
   */
 
-void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT])
+void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT], int j)
 {
 
 // !!! Retain these 4 #pragma directives below in your algo_unpacked implementation !!!
@@ -36,8 +37,10 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 #pragma HLS ARRAY_PARTITION variable=link_out complete dim=0
 #pragma HLS PIPELINE II=3
 #pragma HLS INTERFACE ap_ctrl_hs port=return
-
-static uint j;
+   
+// null algo specific pragma: avoid fully combinatorial algo by specifying min latency
+// otherwise algorithm clock input (ap_clk) gets optimized away
+#pragma HLS latency min=3
 
         static registers reg[N_CH_IN][NCrystalsPerLink];
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
@@ -53,7 +56,7 @@ static uint j;
                 reg[lnk][i].peak_reg[1]=10;
 	   }
 	}*/
-
+	      
 	for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {
 #pragma HLS UNROLL
 		ap_uint<192> output_word=0;
@@ -69,12 +72,9 @@ static uint j;
 		}
 		link_out[lnk]=output_word;
 	}
-j += 1;
+	cout << "shift " << reg[1][1].shift_reg[0] << " " << reg[1][1].shift_reg[1] << " " << reg[1][1].shift_reg[2] << " " << reg[1][1].shift_reg[3] << endl;
+	cout << "peak " << reg[1][1].peak_reg[0] << " " << reg[1][1].peak_reg[1] << endl;
 
-	#ifndef __SYNTHESIS__
-		cout << "shift " << reg[0][1].shift_reg[0] << " " << reg[0][1].shift_reg[1] << " " << reg[0][1].shift_reg[2] << " " << reg[0][1].shift_reg[3] << endl;
-		cout << "peak " << reg[0][1].peak_reg[0] << " " << reg[0][1].peak_reg[1] << endl;
-	#endif
 	// Comment the following not to overwrite the output
 	/*for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {
 #pragma HLS UNROLL
@@ -83,4 +83,3 @@ j += 1;
         link_out[lnk].range(191,8) = link_in[lnk].range(191,8) ;
     }*/
 }
-

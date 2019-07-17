@@ -19,7 +19,6 @@
 #define int19_t ap_int<19>
 #define int21_t ap_int<21>
 #define int25_t ap_int<25>
-#define int3_t ap_int<3>
 #else
 #define uint4_t uint8_t
 #define uint12_t uint16_t
@@ -47,7 +46,7 @@
 
 struct registers {
   uint18_t shift_reg[4]; //4-stage Shift Register for Amplitude Filter
-  uint18_t peak_reg[2]; //2-stage Shift Register for Peak Finder
+  int19_t peak_reg[2]; //2-stage Shift Register for Peak Finder
 };
 
 //void TPG(inPut in[NXtl], outPut out[NXtl]);
