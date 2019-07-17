@@ -52,7 +52,7 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   //3-1 indices.
   r.shift_reg[3] = r.shift_reg[2];
   r.shift_reg[2] = r.shift_reg[1];
-  r.shift_reg[1] = r.shift_reg[0]];
+  r.shift_reg[1] = r.shift_reg[0];
 
   r.shift_reg[0] = linearizerOutput;
 
