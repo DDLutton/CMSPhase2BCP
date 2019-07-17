@@ -618,7 +618,7 @@ link_out[47].range(159, 144) = TPG(link_in[47].range(157, 144), coeff[(47*10)+j]
 link_out[47].range(175, 160) = TPG(link_in[47].range(173, 160), coeff[(47*10)+j], reg[47][9]);
 link_out[47].range(191, 176) = TPG(link_in[47].range(189, 176), coeff[(47*10)+j], reg[47][10]);
 
-j+= 1
+j+= 1;
 
 	#ifndef __SYNTHESIS__
 	cout << "shift " << reg[0][1].shift_reg[0] << " " << reg[0][1].shift_reg[1] << " " << reg[0][1].shift_reg[2] << " " << reg[0][1].shift_reg[3] << endl;
