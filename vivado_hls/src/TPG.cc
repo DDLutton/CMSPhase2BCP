@@ -16,11 +16,29 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   int19_t filterOutput = 0;
   uint4_t shiftfilter = 6;
   uint18_t m = 0;
+
+  uint18_t a = 0;
+  uint18_t b = 0;
+  uint18_t c = 0;
+  uint18_t d=0;
+  uint18_t e=0;
+
+
   int19_t mul = 0;
   int25_t pro = 0;
   int19_t acc = 0;
   int7_t weight[5] = {24, 31, 16, -35, -36}; //Filter Weights
   uint16_t tmpPeak = 0X0000;
+  m = r.shift_reg[3];
+  a=r.shift_reg[2];
+  b=r.shift_reg[1];
+  c=r.shift_reg[0];
+  r.shift_reg[3] = a;
+  r.shift_reg[2] = b;
+  r.shift_reg[1] = c;
+  d=r.peak_reg[1];
+  e=r.peak_reg[0];
+  r.peak_reg[1] = e;
 
   // Linearizer
 
@@ -43,16 +61,6 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   else{
     linearizerOutput = (correctedADC * mult) >> (shiftlin+2); //Linearization Step Output
   }
-  // Amplitude Filter
-  // 4 Stage TAP
-  
-  //NOTEB9: Static variables should be initialized to 0. Is this the case post-synthesis?
-  m = r.shift_reg[3];
-  //So this loop moves the everything in the 2-0 indices in r.shift_reg to the respective
-  //3-1 indices.
-  r.shift_reg[3] = r.shift_reg[2];
-  r.shift_reg[2] = r.shift_reg[1];
-  r.shift_reg[1] = r.shift_reg[0];
 
   r.shift_reg[0] = linearizerOutput;
 
@@ -64,30 +72,31 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   //Could try to changing acc to an array and then adding together the results to a int with enough bits to handle the
   //worst case scenario. Also, ask prasanna about this
   acc = acc + mul;
-
-  for (int8_t j = 3; j >= 0; j--){
-#pragma HLS UNROLL
-    pro = r.shift_reg[j]*weight[j];
-    mul = pro >> shiftfilter;
-    acc = acc + mul;
-  }
+  pro = m*weight[3];
+  mul = pro >> shiftfilter;
+  acc = acc + mul;
+  pro = a*weight[2];
+  mul = pro >> shiftfilter;
+  acc = acc + mul;
+  pro = b*weight[1];
+  mul = pro >> shiftfilter;
+  acc = acc + mul;
+  pro = c*weight[0];
+  mul = pro >> shiftfilter;
+  acc = acc + mul;
 
   filterOutput = acc;
 
-  //NOTEB12: Potential problem if we get a non-zero m randomly before the actual grouping we want.
-  //But maybe am misunderstanding. Ask Prasanna.
   if (filterOutput < 0 or m==0) filterOutput = 0;
-
+  r.peak_reg[0] = filterOutput;
   // Peak Finder
-  if (r.peak_reg[0] > filterOutput && r.peak_reg[0] > r.peak_reg[1]){
+  if (e > filterOutput && e > d){
     // Trigger Primitive Format 16 bits(6 bits timing information, 10 bits amplitude information) 
-    tmpPeak = r.peak_reg[0] >> 2;
+    tmpPeak = e >> 2;
     if (tmpPeak > 0X3FF){
       tmpPeak = 0X03FF;
     }
     
   }
-  r.peak_reg[1] = r.peak_reg[0];
-  r.peak_reg[0] = filterOutput;
   return tmpPeak;
 }
