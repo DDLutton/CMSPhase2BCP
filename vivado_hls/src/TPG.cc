@@ -41,7 +41,7 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
 
   if (correctedADC < 0) linearizerOutput = 0; 
   else{
-    linearizerOutput = (correctedADC * mult) >> 2; //Linearization Step Output
+    linearizerOutput = (correctedADC * mult) >> (shiftlin+2); //Linearization Step Output
   }
   // Amplitude Filter
   // 4 Stage TAP
