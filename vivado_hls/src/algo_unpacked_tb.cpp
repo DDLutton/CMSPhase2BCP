@@ -14,8 +14,8 @@ using namespace std;
 
 //This branch is for partitioning the coefficients array in different ways such to reduce the latency to the point where the
 //interval is three
-//Not sure if the partitioning should happen in algo_unpacked.cpp or in the LUT.h
-//Or potentially just move the coefficient into algo_unpacked.cpp
+//Partitioning doesn't work in LUT.h, it has to be in a function, so considering moving coeff to
+//algo_unpacked, but probably doesn't matter
 //Other changes include:
 //j is moved to a static variable
 //consider moving the j-in into the metadata
