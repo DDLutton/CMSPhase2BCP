@@ -10,8 +10,7 @@
 
 using namespace std;
 
-//#include "algo_unpacked.h"   // This is where you should have had hls_algo - if not find the header file and fix this - please do not copy this file as that defines the interface
-#include "../src/algo_unpacked.h"
+#include "algo_unpacked.h"
 #include "TPG.hh"
 #include "../data/LUT.h"
 
@@ -29,7 +28,7 @@ const int NCrystalsPerLink = 11; // Bits 16-31, 32-47, ..., 176-191, keeping ran
   * !!! N.B. 2: make sure to assign every bit of link_out[] data. First byte should be assigned zero.
   */
 
-void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT], int j)
+void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT])
 {
 
 // !!! Retain these 4 #pragma directives below in your algo_unpacked implementation !!!
@@ -41,24 +40,15 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 // null algo specific pragma: avoid fully combinatorial algo by specifying min latency
 // otherwise algorithm clock input (ap_clk) gets optimized away
 #pragma HLS latency min=3
-
+		
+		static int j;
         static registers reg[N_CH_IN][NCrystalsPerLink];
+
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
-        /*for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {
-#pragma HLS UNROLL
-	   for (int8_t i = 0; i < NCrystalsPerLink; i++){
-#pragma HLS UNROLL
-		reg[lnk][i].shift_reg[0]=10;
-                reg[lnk][i].shift_reg[1]=10;
-                reg[lnk][i].shift_reg[2]=10;
-                reg[lnk][i].shift_reg[3]=10;
-                reg[lnk][i].peak_reg[0]=10;
-                reg[lnk][i].peak_reg[1]=10;
-	   }
-	}*/
 	      
 	for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {
 #pragma HLS UNROLL
+
 		ap_uint<192> output_word=0;
 
 		for (int8_t i = 0; i < NCrystalsPerLink; i++){
@@ -72,8 +62,13 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 		}
 		link_out[lnk]=output_word;
 	}
-	cout << "shift " << reg[1][1].shift_reg[0] << " " << reg[1][1].shift_reg[1] << " " << reg[1][1].shift_reg[2] << " " << reg[1][1].shift_reg[3] << endl;
-	cout << "peak " << reg[1][1].peak_reg[0] << " " << reg[1][1].peak_reg[1] << endl;
+
+	j += 1;
+
+	#ifndef __SYNTHESIS__
+		cout << "shift " << reg[1][1].shift_reg[0] << " " << reg[1][1].shift_reg[1] << " " << reg[1][1].shift_reg[2] << " " << reg[1][1].shift_reg[3] << endl;
+		cout << "peak " << reg[1][1].peak_reg[0] << " " << reg[1][1].peak_reg[1] << endl;
+	#endif
 
 	// Comment the following not to overwrite the output
 	/*for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {
