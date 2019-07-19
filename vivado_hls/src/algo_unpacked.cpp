@@ -33,7 +33,6 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 {
 
 // !!! Retain these 4 #pragma directives below in your algo_unpacked implementation !!!
-#pragma HLS ARRAY_PARTITION variable=coeff block factor=5 dim=0
 #pragma HLS ARRAY_PARTITION variable=link_in complete dim=0
 #pragma HLS ARRAY_PARTITION variable=link_out complete dim=0
 #pragma HLS PIPELINE II=3
@@ -43,26 +42,27 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 // otherwise algorithm clock input (ap_clk) gets optimized away
 #pragma HLS latency min=3
 
-        static registers reg[N_CH_IN][NCrystalsPerLink];
+        static registers reg;
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
-		static int j;
+
+		ap_uint<2> j=link_in[0].range(3,0);
 		ap_uint<192> output_word=0;
+
 		uint24_t mycoeff = coeff[j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
+
 #pragma HLS UNROLL
-			output_word.range(bitHi_out, bitLo) = TPG(link_in[0].range(bitHi_in, bitLo), mycoeff, reg[0][i]);
-		}
-
-
+		
+		output_word.range(47, 32) = TPG(link_in[0].range(45, 32), mycoeff, &reg);
+		
 		link_out[0]=output_word;
 
-		for (int8_t lnk = 3; lnk < N_CH_IN; lnk++) {
+		for (int8_t lnk = 1; lnk < N_CH_IN; lnk++) {
 #pragma HLS UNROLL
 			link_out[lnk]=0;
 	    }
-	j+=1;
 	#ifndef __SYNTHESIS__
-		cout << "shift " << reg[0][1].shift_reg[0] << " " << reg[0][1].shift_reg[1] << " " << reg[0][1].shift_reg[2] << " " << reg[0][1].shift_reg[3] << endl;
-		cout << "peak " << reg[0][1].peak_reg[0] << " " << reg[0][1].peak_reg[1] << endl;
+		cout << "shift " << reg.shift_reg[0] << " " << reg.shift_reg[1] << " " << reg.shift_reg[2] << " " << reg.shift_reg[3] << endl;
+		cout << "peak " << reg.peak_reg[0] << " " << reg.peak_reg[1] << endl;
 	#endif
 	// Comment the following not to overwrite the output
 	/*for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {
