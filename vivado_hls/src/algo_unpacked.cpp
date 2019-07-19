@@ -56,20 +56,17 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 		
 		link_out[0]=output_word;
 
-		for (int8_t lnk = 1; lnk < N_CH_IN; lnk++) {
-#pragma HLS UNROLL
-			link_out[lnk]=0;
-	    }
+
 	#ifndef __SYNTHESIS__
 		cout << "shift " << reg.shift_reg[0] << " " << reg.shift_reg[1] << " " << reg.shift_reg[2] << " " << reg.shift_reg[3] << endl;
 		cout << "peak " << reg.peak_reg[0] << " " << reg.peak_reg[1] << endl;
 	#endif
 	// Comment the following not to overwrite the output
-	/*for (int8_t lnk = 0; lnk < N_CH_IN; lnk++) {
+	for (int8_t lnk = 1; lnk < N_CH_IN; lnk++) {
 #pragma HLS UNROLL
 //  pass-through "algo"
         link_out[lnk].range(7,0) = 0;
         link_out[lnk].range(191,8) = link_in[lnk].range(191,8) ;
-    }*/
+    }
 }
 
