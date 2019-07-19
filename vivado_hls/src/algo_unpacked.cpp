@@ -52,7 +52,7 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 
 #pragma HLS UNROLL
 		
-		output_word.range(47, 32) = TPG(link_in[0].range(45, 32), mycoeff, &reg);
+		output_word.range(47, 32) = TPG(link_in[0].range(45, 32), mycoeff, reg);
 		
 		link_out[0]=output_word;
 
