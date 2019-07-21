@@ -16,7 +16,7 @@ using namespace std;
 #include "../data/LUT.h"
 
 const int NCrystalsPerLink = 11; // Bits 16-31, 32-47, ..., 176-191, keeping range(15, 0) unused
-
+const int NLinksEval = 2;
  /*
   * algo_unpacked interface exposes fully unpacked input and output link data.
   * This version assumes use of 10G 8b10b links, and thus providing 192bits/BX/link.
@@ -33,6 +33,7 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 {
 
 // !!! Retain these 4 #pragma directives below in your algo_unpacked implementation !!!
+#pragma HLS ARRAY_PARTITION variable=coeff block factor=2 dim=1
 #pragma HLS ARRAY_PARTITION variable=link_in complete dim=0
 #pragma HLS ARRAY_PARTITION variable=link_out complete dim=0
 #pragma HLS PIPELINE II=3
@@ -41,28 +42,31 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 // null algo specific pragma: avoid fully combinatorial algo by specifying min latency
 // otherwise algorithm clock input (ap_clk) gets optimized away
 #pragma HLS latency min=3
-
-        static registers reg;
+        static registers reg[NLinksEval];
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
 
-		ap_uint<2> j=link_in[0].range(3,0);
-		ap_uint<192> output_word=0;
+		for (int8_t lnk = 0; lnk < NLinksEval; lnk++) {
+#pragma HLS UNROLL
 
-		uint24_t mycoeff = coeff[j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
+			ap_uint<2> j=link_in[lnk].range(3,0);
+
+			ap_uint<192> output_word=0;
+
+			uint24_t mycoeff = coeff[lnk][j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
 
 #pragma HLS UNROLL
 		
-		output_word.range(47, 32) = TPG(link_in[0].range(45, 32), mycoeff, reg);
-		
-		link_out[0]=output_word;
+			output_word.range(47, 32) = TPG(link_in[lnk].range(45, 32), mycoeff, reg);
+			link_out[lnk]=output_word;
+		}
 
 
 	#ifndef __SYNTHESIS__
-		cout << "shift " << reg.shift_reg[0] << " " << reg.shift_reg[1] << " " << reg.shift_reg[2] << " " << reg.shift_reg[3] << endl;
-		cout << "peak " << reg.peak_reg[0] << " " << reg.peak_reg[1] << endl;
+		cout << "shift " << reg[0].shift_reg[0] << " " << reg[0].shift_reg[1] << " " << reg[0].shift_reg[2] << " " << reg[0].shift_reg[3] << endl;
+		cout << "peak " << reg[0].peak_reg[0] << " " << reg[0].peak_reg[1] << endl;
 	#endif
 	// Comment the following not to overwrite the output
-	for (int8_t lnk = 1; lnk < N_CH_IN; lnk++) {
+	for (int8_t lnk = NLinksEval; lnk < N_CH_IN; lnk++) {
 #pragma HLS UNROLL
 //  pass-through "algo"
         link_out[lnk].range(7,0) = 0;
