@@ -45,29 +45,21 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
         static registers reg[NLinksEval];
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
 
-			ap_uint<2> j[NLinksEval];
-			#pragma HLS ARRAY_PARTITION variable=j complete dim=0
-			j[0]=link_in[0].range(3,0);
+			ap_uint<2> j=link_in[0].range(3,0);
 
-			ap_uint<192> output_word[NLinksEval];
-			#pragma HLS ARRAY_PARTITION variable=output_word complete dim=0
-			output_word[0]=0;
-			output_word[1]=0;
+			ap_uint<192> output_word=0;
 
-			uint24_t mycoeff[2];
-			#pragma HLS ARRAY_PARTITION variable=mycoeff complete dim=0
-
-			mycoeff[0] = coeff[0][j[0]];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
+			uint24_t mycoeff = coeff[0][j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
 		
-			output_word[0].range(47, 32) = TPG(link_in[0].range(45, 32), mycoeff[0], reg[0]);
-			link_out[0]=output_word[0];
+			output_word.range(47, 32) = TPG(link_in[0].range(45, 32), mycoeff, reg[0]);
+			link_out[0]=output_word;
 			
-			j[1]=link_in[1].range(3,0);
+			j=link_in[1].range(3,0);
 
-			mycoeff[1] = coeff[1][j[1]];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
+			mycoeff = coeff[1][j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
 		
-			output_word[1].range(47, 32) = TPG(link_in[1].range(45, 32), mycoeff[1], reg[1]);
-			link_out[1]=output_word[1];
+			output_word.range(47, 32) = TPG(link_in[1].range(45, 32), mycoeff, reg[1]);
+			link_out[1]=output_word;
 		
 
 

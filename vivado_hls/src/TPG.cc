@@ -6,6 +6,8 @@
 using namespace std;
 
 uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
+
+#pragma HLS inline
   int13_t correctedADC = 0;
   uint12_t uncorrectedADC = 0;
   uint18_t linearizerOutput = 0;
