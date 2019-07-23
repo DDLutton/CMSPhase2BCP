@@ -17,7 +17,7 @@ using namespace std;
 
 const int NCrystalsPerLink = 11; // Bits 16-31, 32-47, ..., 176-191, keeping range(15, 0) unused
 const int NLinksEval = 1;
-const int NCrystalsEval = 11
+const int NCrystalsEval = 11;
  /*
   * algo_unpacked interface exposes fully unpacked input and output link data.
   * This version assumes use of 10G 8b10b links, and thus providing 192bits/BX/link.
@@ -47,12 +47,11 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 		for (int8_t lnk = 0; lnk < NLinksEval; lnk++) {
 #pragma HLS UNROLL
 			ap_uint<192> output_word=0;
-
+			ap_uint<4> j=link_in[lnk].range(3,0);
+			
 			for (int8_t i = 0; i < NCrystalsEval; i++){
 #pragma HLS UNROLL
-				ap_uint<2> j=link_in[0].range(3,0);
 
-				ap_uint<192> output_word=0;
 
 				uint24_t mycoeff = coeff[(10*lnk)+j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
 				short bitLo = (1+i)*16;
@@ -66,20 +65,15 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 
 
 	#ifndef __SYNTHESIS__
-		cout << "shift " << reg[0].shift_reg[0] << " " << reg[0].shift_reg[1] << " " << reg[0].shift_reg[2] << " " << reg[0].shift_reg[3] << endl;
-		cout << "peak " << reg[0].peak_reg[0] << " " << reg[0].peak_reg[1] << endl;
+		cout << "shift " << reg[0][1].shift_reg[0] << " " << reg[0][1].shift_reg[1] << " " << reg[0][1].shift_reg[2] << " " << reg[0][1].shift_reg[3] << endl;
+		cout << "peak " << reg[0][1].peak_reg[0] << " " << reg[0][1].peak_reg[1] << endl;
 	#endif
 	// Comment the following not to overwrite the output
 	for (int8_t lnk = NLinksEval; lnk < N_CH_IN; lnk++) {
 #pragma HLS UNROLL
-		for (int8_t i = NCrystalsEval; i < NCrystalsPerLink; i++){
-#pragma HLS UNROLL
 //  pass-through "algo"
-			short bitLo = (1+i)*16;
-			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
         	link_out[lnk].range(7,0) = 0;
-        	link_out[lnk].range(bitHi_out, bitLo) = link_in[lnk].range(bitHi_out, bitLo) ;
-    	}
+        	link_out[lnk].range(191, 8) = link_in[lnk].range(191, 8) ;
 	}
 }
 
