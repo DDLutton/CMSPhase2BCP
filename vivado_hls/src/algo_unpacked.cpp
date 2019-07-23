@@ -34,6 +34,7 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 {
 
 // !!! Retain these 4 #pragma directives below in your algo_unpacked implementation !!!
+#pragma HLS ARRAY_PARTITION variable=coeff complete dim=0
 #pragma HLS ARRAY_PARTITION variable=link_in complete dim=0
 #pragma HLS ARRAY_PARTITION variable=link_out complete dim=0
 #pragma HLS PIPELINE II=3
@@ -46,14 +47,14 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
 		for (int8_t lnk = 0; lnk < NLinksEval; lnk++) {
 #pragma HLS UNROLL
+
 			ap_uint<192> output_word=0;
-			ap_uint<4> j=link_in[lnk].range(3,0);
-			
+			ap_uint<2> j=link_in[lnk].range(45,44);
+			uint24_t mycoeff = coeff[j-1];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
+
 			for (int8_t i = 0; i < NCrystalsEval; i++){
 #pragma HLS UNROLL
 
-
-				uint24_t mycoeff = coeff[(10*lnk)+j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
 				short bitLo = (1+i)*16;
 				short bitHi_in = bitLo+13; // digi inputs are 14 bits
 				short bitHi_out = bitLo+15; // crystal outputs are 16 bits
