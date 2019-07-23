@@ -16,7 +16,8 @@ using namespace std;
 #include "../data/LUT.h"
 
 const int NCrystalsPerLink = 11; // Bits 16-31, 32-47, ..., 176-191, keeping range(15, 0) unused
-const int NLinksEval = 2;
+const int NLinksEval = 1;
+const int NCrystalsEval = 11
  /*
   * algo_unpacked interface exposes fully unpacked input and output link data.
   * This version assumes use of 10G 8b10b links, and thus providing 192bits/BX/link.
@@ -33,7 +34,6 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 {
 
 // !!! Retain these 4 #pragma directives below in your algo_unpacked implementation !!!
-#pragma HLS ARRAY_PARTITION variable=coeff complete dim=0
 #pragma HLS ARRAY_PARTITION variable=link_in complete dim=0
 #pragma HLS ARRAY_PARTITION variable=link_out complete dim=0
 #pragma HLS PIPELINE II=3
@@ -42,25 +42,27 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 // null algo specific pragma: avoid fully combinatorial algo by specifying min latency
 // otherwise algorithm clock input (ap_clk) gets optimized away
 #pragma HLS latency min=3
-        static registers reg[NLinksEval];
+        static registers reg[NLinksEval][NCrystalsEval];
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
-
-			ap_uint<2> j=link_in[0].range(3,0);
-
+		for (int8_t lnk = 0; lnk < NLinksEval; lnk++) {
+#pragma HLS UNROLL
 			ap_uint<192> output_word=0;
 
-			uint24_t mycoeff = coeff[0][j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
-		
-			output_word.range(47, 32) = TPG(link_in[0].range(45, 32), mycoeff, reg[0]);
-			link_out[0]=output_word;
-			
-			j=link_in[1].range(3,0);
+			for (int8_t i = 0; i < NCrystalsEval; i++){
+#pragma HLS UNROLL
+				ap_uint<2> j=link_in[0].range(3,0);
 
-			mycoeff = coeff[1][j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
-		
-			output_word.range(47, 32) = TPG(link_in[1].range(45, 32), mycoeff, reg[1]);
-			link_out[1]=output_word;
-		
+				ap_uint<192> output_word=0;
+
+				uint24_t mycoeff = coeff[(10*lnk)+j];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
+				short bitLo = (1+i)*16;
+				short bitHi_in = bitLo+13; // digi inputs are 14 bits
+				short bitHi_out = bitLo+15; // crystal outputs are 16 bits
+
+				output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
+			}
+			link_out[lnk]=output_word;
+		}
 
 
 	#ifndef __SYNTHESIS__
@@ -70,9 +72,14 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 	// Comment the following not to overwrite the output
 	for (int8_t lnk = NLinksEval; lnk < N_CH_IN; lnk++) {
 #pragma HLS UNROLL
+		for (int8_t i = NCrystalsEval; i < NCrystalsPerLink; i++){
+#pragma HLS UNROLL
 //  pass-through "algo"
-        link_out[lnk].range(7,0) = 0;
-        link_out[lnk].range(191,8) = link_in[lnk].range(191,8) ;
-    }
+			short bitLo = (1+i)*16;
+			short bitHi_out = bitLo+15; // crystal outputs are 16 bits
+        	link_out[lnk].range(7,0) = 0;
+        	link_out[lnk].range(bitHi_out, bitLo) = link_in[lnk].range(bitHi_out, bitLo) ;
+    	}
+	}
 }
 
