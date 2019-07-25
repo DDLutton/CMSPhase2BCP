@@ -49,8 +49,6 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 #pragma HLS UNROLL
 
 			ap_uint<192> output_word=0;
-			ap_uint<2> j=link_in[lnk].range(45,44);
-			uint24_t mycoeff = coeff[j-1];//0xb7506a;//coeff[lnk*NCrystalsPerLink+i]; // FIXME take the coefficient from LUTs
 
 			for (int8_t i = 0; i < NCrystalsEval; i++){
 #pragma HLS UNROLL
@@ -58,9 +56,8 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 				short bitLo = (1+i)*16;
 				short bitHi_in = bitLo+13; // digi inputs are 14 bits
 				short bitHi_out = bitLo+15; // crystal outputs are 16 bits
-				ap_uint<2> j=link_in[lnk].range(bitHi_in,bitHi_in-2);
-				uint24_t mycoeff = coeff[(lnk*NCrystalsEval)+i][j]; // FIXME take the coefficient from LUTs
-
+				ap_uint<2> j=link_in[lnk].range(bitHi_in,bitHi_in-1);
+				uint24_t mycoeff = coeff[(lnk*NCrystalsEval)+i][j-1]; // FIXME take the coefficient from LUTs
 				output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
 			}
 			link_out[lnk]=output_word;
@@ -68,8 +65,14 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 
 
 	#ifndef __SYNTHESIS__
-		cout << "shift " << reg[0][1].shift_reg[0] << " " << reg[0][1].shift_reg[1] << " " << reg[0][1].shift_reg[2] << " " << reg[0][1].shift_reg[3] << endl;
-		cout << "peak " << reg[0][1].peak_reg[0] << " " << reg[0][1].peak_reg[1] << endl;
+		static int countr = 0;
+		cout << "start " << countr << endl;
+		for (int l = 0; l < NLinksEval; l++){
+			cout << "shift " << l << " " <<  reg[l][1].shift_reg[0] << " " << reg[l][1].shift_reg[1] << " " << reg[l][1].shift_reg[2] << " " << reg[l][1].shift_reg[3] << endl;
+			cout << "peak " << l << " "<< reg[l][1].peak_reg[0] << " " << reg[l][1].peak_reg[1] << endl;
+			cout << "next" << endl;
+		}
+		countr +=1;
 	#endif
 	// Comment the following not to overwrite the output
 	for (int8_t lnk = NLinksEval; lnk < N_CH_IN; lnk++) {
