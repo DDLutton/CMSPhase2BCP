@@ -7,7 +7,16 @@ using namespace std;
 
 uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
 
+//Having HLS consider TPG as a separate function from algo_unpacked
+//increases the interval
+//Possibly due to both it having less flexibility to pipeline
+//and also because it creates a limited number of TPG instances which it runs multiple times
+//In any case this pragma effectively concatenates the functions and with that done HLS seems to be able
+//to get the interval down to 3.
 #pragma HLS inline
+
+
+
   int13_t correctedADC = 0;
   uint12_t uncorrectedADC = 0;
   uint18_t linearizerOutput = 0;

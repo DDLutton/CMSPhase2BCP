@@ -1,12 +1,4 @@
-#ifndef LUTs_h
-#define LUTs_h
-#include <stdint.h>
-
-//Coefficients for each gain in crystal that is run over
-//Most of these are generated randomly and used for the crystals that aren't actually receiving data
-//There is code in the python directory to make smaller or larger amounts of these coefficients 
-//based on an already generated array with the max amount of crystals
-//ToChange: Try implementing these coefficients in synthesis using BRAM
+C coeff:
 static const uint24_t coeff[308][3] = {{0xbc5063, 0xbc4095, 0x8110bf},
 {0xb7506a, 0xb74099, 0x8910c0},
 {0x815076, 0x81409f, 0xd410c1},
@@ -315,5 +307,3 @@ static const uint24_t coeff[308][3] = {{0xbc5063, 0xbc4095, 0x8110bf},
 {0xf55071, 0xf5409c, 0xb820c0},
 {0xb25064, 0xb24096, 0x8610bf},
 {0xd55075, 0xd5409e, 0x9810c1}};
-
-#endif

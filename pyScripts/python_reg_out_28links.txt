@@ -1,0 +1,850 @@
+start 0
+shift 0 135 0 0 0
+peak 0 0 0
+next
+shift 1 112 0 0 0
+peak 1 0 0
+next
+shift 2 132 0 0 0
+peak 2 0 0
+next
+shift 3 89 0 0 0
+peak 3 0 0
+next
+shift 4 83 0 0 0
+peak 4 0 0
+next
+shift 5 123 0 0 0
+peak 5 0 0
+next
+shift 6 143 0 0 0
+peak 6 0 0
+next
+shift 7 152 0 0 0
+peak 7 0 0
+next
+shift 8 146 0 0 0
+peak 8 0 0
+next
+shift 9 155 0 0 0
+peak 9 0 0
+next
+shift 10 149 0 0 0
+peak 10 0 0
+next
+shift 11 127 0 0 0
+peak 11 0 0
+next
+shift 12 75 0 0 0
+peak 12 0 0
+next
+shift 13 128 0 0 0
+peak 13 0 0
+next
+shift 14 104 0 0 0
+peak 14 0 0
+next
+shift 15 76 0 0 0
+peak 15 0 0
+next
+shift 16 85 0 0 0
+peak 16 0 0
+next
+shift 17 103 0 0 0
+peak 17 0 0
+next
+shift 18 102 0 0 0
+peak 18 0 0
+next
+shift 19 70 0 0 0
+peak 19 0 0
+next
+shift 20 72 0 0 0
+peak 20 0 0
+next
+shift 21 77 0 0 0
+peak 21 0 0
+next
+shift 22 142 0 0 0
+peak 22 0 0
+next
+shift 23 127 0 0 0
+peak 23 0 0
+next
+shift 24 85 0 0 0
+peak 24 0 0
+next
+shift 25 112 0 0 0
+peak 25 0 0
+next
+shift 26 87 0 0 0
+peak 26 0 0
+next
+shift 27 75 0 0 0
+peak 27 0 0
+next
+start 1
+shift 0 135 135 0 0
+peak 0 0 0
+next
+shift 1 109 112 0 0
+peak 1 0 0
+next
+shift 2 133 132 0 0
+peak 2 0 0
+next
+shift 3 91 89 0 0
+peak 3 0 0
+next
+shift 4 84 83 0 0
+peak 4 0 0
+next
+shift 5 123 123 0 0
+peak 5 0 0
+next
+shift 6 144 143 0 0
+peak 6 0 0
+next
+shift 7 146 152 0 0
+peak 7 0 0
+next
+shift 8 147 146 0 0
+peak 8 0 0
+next
+shift 9 152 155 0 0
+peak 9 0 0
+next
+shift 10 151 149 0 0
+peak 10 0 0
+next
+shift 11 128 127 0 0
+peak 11 0 0
+next
+shift 12 77 75 0 0
+peak 12 0 0
+next
+shift 13 127 128 0 0
+peak 13 0 0
+next
+shift 14 104 104 0 0
+peak 14 0 0
+next
+shift 15 76 76 0 0
+peak 15 0 0
+next
+shift 16 84 85 0 0
+peak 16 0 0
+next
+shift 17 100 103 0 0
+peak 17 0 0
+next
+shift 18 102 102 0 0
+peak 18 0 0
+next
+shift 19 70 70 0 0
+peak 19 0 0
+next
+shift 20 74 72 0 0
+peak 20 0 0
+next
+shift 21 75 77 0 0
+peak 21 0 0
+next
+shift 22 140 142 0 0
+peak 22 0 0
+next
+shift 23 129 127 0 0
+peak 23 0 0
+next
+shift 24 85 85 0 0
+peak 24 0 0
+next
+shift 25 111 112 0 0
+peak 25 0 0
+next
+shift 26 87 87 0 0
+peak 26 0 0
+next
+shift 27 73 75 0 0
+peak 27 0 0
+next
+start 2
+shift 0 132 135 135 0
+peak 0 0 0
+next
+shift 1 110 109 112 0
+peak 1 0 0
+next
+shift 2 130 133 132 0
+peak 2 0 0
+next
+shift 3 89 91 89 0
+peak 3 0 0
+next
+shift 4 83 84 83 0
+peak 4 0 0
+next
+shift 5 124 123 123 0
+peak 5 0 0
+next
+shift 6 141 144 143 0
+peak 6 0 0
+next
+shift 7 145 146 152 0
+peak 7 0 0
+next
+shift 8 146 147 146 0
+peak 8 0 0
+next
+shift 9 148 152 155 0
+peak 9 0 0
+next
+shift 10 155 151 149 0
+peak 10 0 0
+next
+shift 11 124 128 127 0
+peak 11 0 0
+next
+shift 12 76 77 75 0
+peak 12 0 0
+next
+shift 13 127 127 128 0
+peak 13 0 0
+next
+shift 14 102 104 104 0
+peak 14 0 0
+next
+shift 15 76 76 76 0
+peak 15 0 0
+next
+shift 16 82 84 85 0
+peak 16 0 0
+next
+shift 17 100 100 103 0
+peak 17 0 0
+next
+shift 18 101 102 102 0
+peak 18 0 0
+next
+shift 19 69 70 70 0
+peak 19 0 0
+next
+shift 20 71 74 72 0
+peak 20 0 0
+next
+shift 21 73 75 77 0
+peak 21 0 0
+next
+shift 22 139 140 142 0
+peak 22 0 0
+next
+shift 23 125 129 127 0
+peak 23 0 0
+next
+shift 24 87 85 85 0
+peak 24 0 0
+next
+shift 25 107 111 112 0
+peak 25 0 0
+next
+shift 26 88 87 87 0
+peak 26 0 0
+next
+shift 27 74 73 75 0
+peak 27 0 0
+next
+start 3
+shift 0 368 132 135 135
+peak 0 160 0
+next
+shift 1 244 110 109 112
+peak 1 109 0
+next
+shift 2 337 130 133 132
+peak 2 148 0
+next
+shift 3 229 89 91 89
+peak 3 101 0
+next
+shift 4 192 83 84 83
+peak 4 87 0
+next
+shift 5 373 124 123 123
+peak 5 161 0
+next
+shift 6 403 141 144 143
+peak 6 176 0
+next
+shift 7 319 145 146 152
+peak 7 141 0
+next
+shift 8 310 146 147 146
+peak 8 142 0
+next
+shift 9 292 148 152 155
+peak 9 133 0
+next
+shift 10 381 155 151 149
+peak 10 172 0
+next
+shift 11 315 124 128 127
+peak 11 140 0
+next
+shift 12 188 76 77 75
+peak 12 83 0
+next
+shift 13 351 127 127 128
+peak 13 153 0
+next
+shift 14 288 102 104 104
+peak 14 126 0
+next
+shift 15 241 76 76 76
+peak 15 103 0
+next
+shift 16 340 82 84 85
+peak 16 140 0
+next
+shift 17 340 100 100 103
+peak 17 143 0
+next
+shift 18 366 101 102 102
+peak 18 154 0
+next
+shift 19 308 69 70 70
+peak 19 126 0
+next
+shift 20 308 71 74 72
+peak 20 127 0
+next
+shift 21 324 73 75 77
+peak 21 131 0
+next
+shift 22 433 139 140 142
+peak 22 186 0
+next
+shift 23 351 125 129 127
+peak 23 153 0
+next
+shift 24 213 87 85 85
+peak 24 95 0
+next
+shift 25 340 107 111 112
+peak 25 143 0
+next
+shift 26 353 88 87 87
+peak 26 147 0
+next
+shift 27 284 74 73 75
+peak 27 117 0
+next
+start 4
+shift 0 17364 368 132 135
+peak 0 6572 160
+next
+shift 1 10948 244 110 109
+peak 1 4127 109
+next
+shift 2 13685 337 130 133
+peak 2 5178 148
+next
+shift 3 9825 229 89 91
+peak 3 3715 101
+next
+shift 4 7445 192 83 84
+peak 4 2811 87
+next
+shift 5 18044 373 124 123
+peak 5 6839 161
+next
+shift 6 17491 403 141 144
+peak 6 6629 176
+next
+shift 7 12031 319 145 146
+peak 7 4535 141
+next
+shift 8 12042 310 146 147
+peak 8 4537 142
+next
+shift 9 10953 292 148 152
+peak 9 4113 133
+next
+shift 10 15333 381 155 151
+peak 10 5804 172
+next
+shift 11 14382 315 124 128
+peak 11 5434 140
+next
+shift 12 7987 188 76 77
+peak 12 3019 83
+next
+shift 13 14727 351 127 127
+peak 13 5581 153
+next
+shift 14 14755 288 102 104
+peak 14 5581 126
+next
+shift 15 13172 241 76 76
+peak 15 4989 103
+next
+shift 16 17100 340 82 84
+peak 16 6502 140
+next
+shift 17 15025 340 100 100
+peak 17 5710 143
+next
+shift 18 15435 366 101 102
+peak 18 5876 154
+next
+shift 19 16061 308 69 70
+peak 19 6109 126
+next
+shift 20 14965 308 71 74
+peak 20 5695 127
+next
+shift 21 16344 324 73 75
+peak 21 6217 131
+next
+shift 22 18815 433 139 140
+peak 22 7141 186
+next
+shift 23 15856 351 125 129
+peak 23 6004 153
+next
+shift 24 8662 213 87 85
+peak 24 3277 95
+next
+shift 25 19181 340 107 111
+peak 25 7258 143
+next
+shift 26 18952 353 88 87
+peak 26 7202 147
+next
+shift 27 16151 284 74 73
+peak 27 6128 117
+next
+start 5
+shift 0 23050 17364 368 132
+peak 0 16996 6572
+next
+shift 1 14641 10948 244 110
+peak 1 10730 4127
+next
+shift 2 18007 13685 337 130
+peak 2 13317 5178
+next
+shift 3 12989 9825 229 89
+peak 3 9584 3715
+next
+shift 4 9821 7445 192 83
+peak 4 7242 2811
+next
+shift 5 23897 18044 373 124
+peak 5 17656 6839
+next
+shift 6 22990 17491 403 141
+peak 6 17034 6629
+next
+shift 7 15834 12031 319 145
+peak 7 11680 4535
+next
+shift 8 15966 12042 310 146
+peak 8 11733 4537
+next
+shift 9 14490 10953 292 148
+peak 9 10644 4113
+next
+shift 10 20179 15333 381 155
+peak 10 14918 5804
+next
+shift 11 19108 14382 315 124
+peak 11 14069 5434
+next
+shift 12 10548 7987 188 76
+peak 12 7784 3019
+next
+shift 13 19368 14727 351 127
+peak 13 14341 5581
+next
+shift 14 19668 14755 288 102
+peak 14 14478 5581
+next
+shift 15 17576 13172 241 76
+peak 15 12946 4989
+next
+shift 16 22497 17100 340 82
+peak 16 16710 6502
+next
+shift 17 19651 15025 340 100
+peak 17 14619 5710
+next
+shift 18 20090 15435 366 101
+peak 18 14986 5876
+next
+shift 19 21179 16061 308 69
+peak 19 15720 6109
+next
+shift 20 19600 14965 308 71
+peak 20 14594 5695
+next
+shift 21 21501 16344 324 73
+peak 21 15976 6217
+next
+shift 22 24654 18815 433 139
+peak 22 18310 7141
+next
+shift 23 20938 15856 351 125
+peak 23 15476 6004
+next
+shift 24 11445 8662 213 87
+peak 24 8443 3277
+next
+shift 25 25688 19181 340 107
+peak 25 18886 7258
+next
+shift 26 25127 18952 353 88
+peak 26 18591 7202
+next
+shift 27 21480 16151 284 74
+peak 27 15866 6128
+next
+start 6
+shift 0 20515 23050 17364 368
+peak 0 22921 16996
+next
+shift 1 13061 14641 10948 244
+peak 1 14529 10730
+next
+shift 2 15995 18007 13685 337
+peak 2 17882 13317
+next
+shift 3 11568 12989 9825 229
+peak 3 12908 9584
+next
+shift 4 8728 9821 7445 192
+peak 4 9739 7242
+next
+shift 5 21265 23897 18044 373
+peak 5 23786 17656
+next
+shift 6 20416 22990 17491 403
+peak 6 22862 17034
+next
+shift 7 14072 15834 12031 319
+peak 7 15696 11680
+next
+shift 8 14238 15966 12042 310
+peak 8 15829 11733
+next
+shift 9 12927 14490 10953 292
+peak 9 14359 10644
+next
+shift 10 17927 20179 15333 381
+peak 10 20032 14918
+next
+shift 11 17034 19108 14382 315
+peak 11 18994 14069
+next
+shift 12 9390 10548 7987 188
+peak 12 10480 7784
+next
+shift 13 17210 19368 14727 351
+peak 13 19251 14341
+next
+shift 14 17547 19668 14755 288
+peak 14 19578 14478
+next
+shift 15 15677 17576 13172 241
+peak 15 17509 12946
+next
+shift 16 19974 22497 17100 340
+peak 16 22428 16710
+next
+shift 17 17419 19651 15025 340
+peak 17 19563 14619
+next
+shift 18 17786 20090 15435 366
+peak 18 20000 14986
+next
+shift 19 18812 21179 16061 308
+peak 19 21119 15720
+next
+shift 20 17374 19600 14965 308
+peak 20 19540 14594
+next
+shift 21 19080 21501 16344 324
+peak 21 21435 15976
+next
+shift 22 21870 24654 18815 433
+peak 22 24529 18310
+next
+shift 23 18612 20938 15856 351
+peak 23 20821 15476
+next
+shift 24 10171 11445 8662 213
+peak 24 11356 8443
+next
+shift 25 22941 25688 19181 340
+peak 25 25592 18886
+next
+shift 26 22353 25127 18952 353
+peak 26 25046 18591
+next
+shift 27 19137 21480 16151 284
+peak 27 21419 15866
+next
+start 7
+shift 0 15618 20515 23050 17364
+peak 0 11851 22921
+next
+shift 1 9965 13061 14641 10948
+peak 1 7596 14529
+next
+shift 2 12162 15995 18007 13685
+peak 2 9134 17882
+next
+shift 3 8798 11568 12989 9825
+peak 3 6646 12908
+next
+shift 4 6635 8728 9821 7445
+peak 4 4990 9739
+next
+shift 5 16183 21265 23897 18044
+peak 5 12264 23786
+next
+shift 6 15522 20416 22990 17491
+peak 6 11663 22862
+next
+shift 7 10722 14072 15834 12031
+peak 7 8034 15696
+next
+shift 8 10854 14238 15966 12042
+peak 8 8196 15829
+next
+shift 9 9851 12927 14490 10953
+peak 9 7422 14359
+next
+shift 10 13650 17927 20179 15333
+peak 10 10244 20032
+next
+shift 11 12971 17034 19108 14382
+peak 11 9847 18994
+next
+shift 12 7143 9390 10548 7987
+peak 12 5389 10480
+next
+shift 13 13083 17210 19368 14727
+peak 13 9832 19251
+next
+shift 14 13345 17547 19668 14755
+peak 14 10188 19578
+next
+shift 15 11930 15677 17576 13172
+peak 15 9120 17509
+next
+shift 16 15176 19974 22497 17100
+peak 16 11445 22428
+next
+shift 17 13233 17419 19651 15025
+peak 17 9902 19563
+next
+shift 18 13501 17786 20090 15435
+peak 18 10051 20000
+next
+shift 19 14293 18812 21179 16061
+peak 19 10807 21119
+next
+shift 20 13194 17374 19600 14965
+peak 20 9904 19540
+next
+shift 21 14499 19080 21501 16344
+peak 21 10931 21435
+next
+shift 22 16621 21870 24654 18815
+peak 22 12454 24529
+next
+shift 23 14157 18612 20938 15856
+peak 23 10687 20821
+next
+shift 24 7756 10171 11445 8662
+peak 24 5837 11356
+next
+shift 25 17463 22941 25688 19181
+peak 25 13400 25592
+next
+shift 26 16995 22353 25127 18952
+peak 26 12917 25046
+next
+shift 27 14553 19137 21480 16151
+peak 27 11103 21419
+next
+start 8
+shift 0 11045 15618 20515 23050
+peak 0 0 11851
+next
+shift 1 7062 9965 13061 14641
+peak 1 0 7596
+next
+shift 2 8592 12162 15995 18007
+peak 2 0 9134
+next
+shift 3 6225 8798 11568 12989
+peak 3 0 6646
+next
+shift 4 4703 6635 8728 9821
+peak 4 0 4990
+next
+shift 5 11434 16183 21265 23897
+peak 5 0 12264
+next
+shift 6 10978 15522 20416 22990
+peak 6 0 11663
+next
+shift 7 7590 10722 14072 15834
+peak 7 0 8034
+next
+shift 8 7668 10854 14238 15966
+peak 8 0 8196
+next
+shift 9 6984 9851 12927 14490
+peak 9 0 7422
+next
+shift 10 9646 13650 17927 20179
+peak 10 0 10244
+next
+shift 11 9180 12971 17034 19108
+peak 11 0 9847
+next
+shift 12 5063 7143 9390 10548
+peak 12 0 5389
+next
+shift 13 9247 13083 17210 19368
+peak 13 0 9832
+next
+shift 14 9430 13345 17547 19668
+peak 14 0 10188
+next
+shift 15 8433 11930 15677 17576
+peak 15 0 9120
+next
+shift 16 10719 15176 19974 22497
+peak 16 0 11445
+next
+shift 17 9355 13233 17419 19651
+peak 17 0 9902
+next
+shift 18 9538 13501 17786 20090
+peak 18 0 10051
+next
+shift 19 10091 14293 18812 21179
+peak 19 0 10807
+next
+shift 20 9307 13194 17374 19600
+peak 20 0 9904
+next
+shift 21 10233 14499 19080 21501
+peak 21 0 10931
+next
+shift 22 11761 16621 21870 24654
+peak 22 0 12454
+next
+shift 23 9999 14157 18612 20938
+peak 23 0 10687
+next
+shift 24 5473 7756 10171 11445
+peak 24 0 5837
+next
+shift 25 12352 17463 22941 25688
+peak 25 0 13400
+next
+shift 26 11998 16995 22353 25127
+peak 26 0 12917
+next
+shift 27 10280 14553 19137 21480
+peak 27 0 11103
+next
+start 9
+shift 0 7483 11045 15618 20515
+peak 0 0 0
+next
+shift 1 4805 7062 9965 13061
+peak 1 0 0
+next
+shift 2 5845 8592 12162 15995
+peak 2 0 0
+next
+shift 3 4233 6225 8798 11568
+peak 3 0 0
+next
+shift 4 3197 4703 6635 8728
+peak 4 0 0
+next
+shift 5 7759 11434 16183 21265
+peak 5 0 0
+next
+shift 6 7449 10978 15522 20416
+peak 6 0 0
+next
+shift 7 5154 7590 10722 14072
+peak 7 0 0
+next
+shift 8 5238 7668 10854 14238
+peak 8 0 0
+next
+shift 9 4760 6984 9851 12927
+peak 9 0 0
+next
+shift 10 6574 9646 13650 17927
+peak 10 0 0
+next
+shift 11 6239 9180 12971 17034
+peak 11 0 0
+next
+shift 12 3434 5063 7143 9390
+peak 12 0 0
+next
+shift 13 6284 9247 13083 17210
+peak 13 0 0
+next
+shift 14 6392 9430 13345 17547
+peak 14 0 0
+next
+shift 15 5719 8433 11930 15677
+peak 15 0 0
+next
+shift 16 7246 10719 15176 19974
+peak 16 0 0
+next
+shift 17 6330 9355 13233 17419
+peak 17 0 0
+next
+shift 18 6446 9538 13501 17786
+peak 18 0 0
+next
+shift 19 6821 10091 14293 18812
+peak 19 0 0
+next
+shift 20 6296 9307 13194 17374
+peak 20 0 0
+next
+shift 21 6930 10233 14499 19080
+peak 21 0 0
+next
+shift 22 7965 11761 16621 21870
+peak 22 0 0
+next
+shift 23 6781 9999 14157 18612
+peak 23 0 0
+next
+shift 24 3727 5473 7756 10171
+peak 24 0 0
+next
+shift 25 8371 12352 17463 22941
+peak 25 0 0
+next
+shift 26 8113 11998 16995 22353
+peak 26 0 0
+next
+shift 27 6945 10280 14553 19137
+peak 27 0 0
+next

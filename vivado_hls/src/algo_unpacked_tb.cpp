@@ -15,16 +15,6 @@ using namespace std;
 ap_uint<192> link_in[N_CH_IN];
 ap_uint<192> link_out[N_CH_OUT];
 
-//So this is for partitioning the LUT with simplified input
-//First gonna finish simplification
-//and then alter the LUT so that we dont' have to have it be 570 coefficients long which is clearly unneccessary.
-//rather it seems that all that matters is whether or not the j is over 3 
-//as j only goes to 90 in the test we have
-//so okay yeah doing that
-//also making the register array just one thing since we only care about one crystal
-//and shifting j to the input since that will be how it works in the end
-
-
 int main(int argc, char ** argv) {
 
 	string test_vector;

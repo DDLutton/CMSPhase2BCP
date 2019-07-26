@@ -1,7 +1,8 @@
 #ifndef TPG_hh
 #define TPG_hh
-
+//As far as I can tell this variable isn't used anywhere
 #define NXtl 1 //Also tested with 300 crystals
+//Or this one
 #define NEvents 570 //This is only for testing on the test bench
 #define Vivado 1 //Uncomment for synthesis
 
@@ -46,6 +47,9 @@
 
 struct registers {
   uint18_t shift_reg[4]; //4-stage Shift Register for Amplitude Filter
+  
+  //ToChange:I haven't tested with it yet, but there doesn't seem to be any reason that peak_reg should be int19 instead of
+  //uint18. Can save a small amount of resources by changing it.
   int19_t peak_reg[2]; //2-stage Shift Register for Peak Finder
 };
 
