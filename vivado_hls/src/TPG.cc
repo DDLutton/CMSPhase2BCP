@@ -15,8 +15,10 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
 //to get the interval down to 3.
 #pragma HLS inline
 
-
-
+//ToCheck: seems like some of the signed variables could be reduced to unsigned with if statements
+//as, for instance, the result of correctedADC being negative is just something being set to zero.
+//There might still be a way to do it, but the different things I tried
+//seemed to just lead to more resource usage.  
   int13_t correctedADC = 0;
   uint12_t uncorrectedADC = 0;
   uint18_t linearizerOutput = 0;
@@ -44,10 +46,9 @@ uint16_t TPG(uint14_t data_int, uint24_t lincoeff, registers &r){
   shiftlin = (coeff & 0XF000) >> 12; //Shift Value
   mult = (coeff & 0XFF0000) >> 16; //Multiplication value
   correctedADC = (uncorrectedADC - base); // Subtract Pedestal
-  if (correctedADC < 0) linearizerOutput = shiftlin << 12; 
   prod = correctedADC * mult; 
   linearizerOutput = prod >> (shiftlin + 2); //Linearization Step Output
-  if (linearizerOutput > 0X30000) linearizerOutput = 0;
+  if (linearizerOutput > 0X30000 || correctedADC < 0) linearizerOutput = 0;
 
   // Amplitude Filter
   // 4 Stage TAP
