@@ -22,9 +22,13 @@ using namespace std;
 const int NCrystalsPerLink = 11; // Bits 16-31, 32-47, ..., 176-191, keeping range(15, 0) unused
 //Defines how many links and crystals you want the TPG to run over
 //28 Links and 11 crystals gets you 308 inputs, which is just over the total amount of crystals we'll need.
-int NLinksEval = 28;
+//Functionality added so that we use exactly 300 crystals
+const int NLinksEval = 28;
 const int NCrystalsEval = 11;
 const int MaxCrystals = 300;
+//Make sure to set NLinksEval such that NCrystalsEval*NLinksEval isn't greater than MaxCrystals by more than NCrystalsEval
+
+
  /*
   * algo_unpacked interface exposes fully unpacked input and output link data.
   * This version assumes use of 10G 8b10b links, and thus providing 192bits/BX/link.
@@ -97,13 +101,13 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 				
 				uint24_t mycoeff = coeff[(lnk*NCrystalsEval)+i][j-1]; // FIXME take the coefficient from LUTs
 				output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
-				if (lnk*11+i) >= MaxCrystals {
+				if ((lnk*11+i) >= MaxCrystals) {
 					output_word.range(191,bitHi_out+1) = link_in[lnk].range(191,bitHi_out+1)
 					break;
 				}
 			}
 			link_out[lnk]=output_word;
-			if ((lnk+1)*11) >= MaxCrystals {
+			if (((lnk+1)*11) >= MaxCrystals) {
 				NLinksEval = lnk+1
 				break;
 			}
