@@ -69,6 +69,7 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 		//and is potentially necessary for later functionality
         static registers reg[NLinksEval][NCrystalsEval];
 #pragma HLS ARRAY_PARTITION variable=reg complete dim=0
+#pragma HLS reset variable=reg
 
 		//Using NLinksEval instead of N_CH_IN to 
 		//ToChange: For some reason there seems to be differences in using the UNROLL pragma vs manually loop unrolling
