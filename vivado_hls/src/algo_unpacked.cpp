@@ -102,13 +102,12 @@ void algo_unpacked(ap_uint<192> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 				uint24_t mycoeff = coeff[(lnk*NCrystalsEval)+i][j-1]; // FIXME take the coefficient from LUTs
 				output_word.range(bitHi_out, bitLo) = TPG(link_in[lnk].range(bitHi_in, bitLo), mycoeff, reg[lnk][i]);
 				if ((lnk*11+i) >= MaxCrystals) {
-					output_word.range(191,bitHi_out+1) = link_in[lnk].range(191,bitHi_out+1)
+					output_word.range(191,bitHi_out+1) = link_in[lnk].range(191,bitHi_out+1);
 					break;
 				}
 			}
 			link_out[lnk]=output_word;
 			if (((lnk+1)*11) >= MaxCrystals) {
-				NLinksEval = lnk+1
 				break;
 			}
 		}
