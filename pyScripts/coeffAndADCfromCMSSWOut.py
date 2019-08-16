@@ -14,13 +14,29 @@ import numpy as np
 N_CHANNEL_IN = 48
 #Total number of links to put actual input in
 xLinks = 28
+#Number of events to iterate through
+nEvents = 2
 
 inputName = "test2"
 filename = "100Events_300Channels"
 
 #The first input file Nancy gave is formatted differently; use this if you're looking at "Chain_withSignal_100evt"
 chain = False
+#For getting the linearizer, filter, and peak output as well
+lFPOut = True
 
+if lFPOut:
+    """
+    lOut = np.zeros((nEvents,300,10),dtype=int)
+    fOut = np.zeros((nEvents,300,10),dtype=int)
+    pOut = np.zeros((nEvents,300,10),dtype=int)
+    lfpOut = [lOut,fOut,pOut]
+    """
+    lfpOut = np.zeros((3,nEvents,300,10),dtype=int)
+    lfpIter = -1
+    maxValAr= [0x30000,0x3FFFF,0x3FF]
+    giveValAr = [0,0x3FFFF,0x3FF]
+    
 with open(filename) as inFile:
     #Keeps track of which event
     evtCtr = 0
@@ -41,14 +57,15 @@ with open(filename) as inFile:
     #Holds the coefficients in order after they've been accumulated
     coeffAr = []
     #Holds the input. dimensions: event, crystal, input number
-    linkAr = np.zeros((100,300,10),dtype=int)
-    linkOAr = np.zeros((100,300,10),dtype=int)
+    linkAr = np.zeros((nEvents,300,10),dtype=int)
+    linkOAr = np.zeros((nEvents,300,10),dtype=int)
     #Used to differentiate between the input and the output part of the file
     out = False
     #Used to count which part of the input you're one when going over one crystal
     adcCount = 0
     #Used to check the consistency of coefficients across events
     tmpVal = ""
+    #Used to cut off the outputs at the
     #Loop for the whole file
     for k,line in enumerate(inFile):
         #Skips however many lines are put into skip
@@ -60,6 +77,8 @@ with open(filename) as inFile:
         if "Treating event" in line:
             evttst = evtCtr
             evtCtr =  int(re.split(r'[ \n]', line)[5][:-1])
+            if evtCtr > nEvents:
+                break
             if evtCtr - evttst != 1:
                 print("event skipping between {0} and {1}".format(evttst,evtCtr))
             if chain:
@@ -82,11 +101,12 @@ with open(filename) as inFile:
                 cryCount += 1
                 if cryCount > 300:
                     print("cryCount too highCount")
+            lfpIter = -1
             continue
         
         #Skipping output for now. Add later
         elif "output" in line:
-            skip = 6
+            lfpIter +=1
             out = True
             continue
         
@@ -99,11 +119,19 @@ with open(filename) as inFile:
             continue
         
         if out:
-            for j,i in enumerate(range(1,20,2)):
-                if int(lineAr[i])> 1023:
-                    linkOAr[evtCtr-1,idDict[rawId],j] = 1023
-                else:
-                    linkOAr[evtCtr-1,idDict[rawId],j] = int(lineAr[i])
+            if lfpIter == 3:
+                for j,i in enumerate(range(1,20,2)):
+                    if int(lineAr[i])> 1023:
+                        linkOAr[evtCtr-1,idDict[rawId],j] = 1023
+                    else:
+                        linkOAr[evtCtr-1,idDict[rawId],j] = int(lineAr[i])
+            else:
+                for i in range(10):
+                    if int(lineAr[i])> maxValAr[lfpIter]:
+                        lfpOut[lfpIter,evtCtr-1,idDict[rawId],i] = giveValAr[lfpIter]
+                    else:
+                        lfpOut[lfpIter,evtCtr-1,idDict[rawId],i] = int(lineAr[i])
+                    
         else:
             #Getting the gain
             gainVal = int(lineAr[0])
@@ -144,8 +172,8 @@ else:
 
 
 
-outFile = open("{0}_{1}_{2}links_inp.txt".format(inputName,filename,xLinks),"w")
-outFileTwo = open("{0}_{1}_{2}links_out_ref.txt".format(inputName,filename,xLinks),"w")
+outFile = open("{0}_{1}__{2}evts_{3}links_inp.txt".format(inputName,filename,nEvents,xLinks),"w")
+outFileTwo = open("{0}_{1}__{2}evts_{3}links_out_ref.txt".format(inputName,filename,nEvents,xLinks),"w")
 
 j=0
 
@@ -204,3 +232,35 @@ for ar in coeffAr[1:]:
 outFile.write("]\n")    
 
 outFile.close()
+
+nameAr = ["linOut","filtOut"]
+outFile = open("reg_out_{}_{}evts_{}links.txt".format(filename,nEvents,xLinks),"w")
+for ev in range(nEvents):
+    outFile.write("ev "+str(ev)+"\n")
+    for i in range(10):
+        outFile.write("adc "+str(i)+"\n")
+        for cry in range(300):
+            outFile.write("crystal "+str(cry)+"\n")
+            for j in range(3):
+                if i <3:
+                    if j == 2:
+                        if i ==0:
+                            outFile.write("peakOut "+str(lfpOut[j,ev,cry,i])+" 0")
+                        else:
+                            outFile.write("peakOut "+str(lfpOut[j,ev,cry,i])+" "+str(lfpOut[j,ev,cry,i-1]))
+                    else:
+                        outFile.write(str(nameAr[j]))
+                        for k in range(i+1):
+                            outFile.write(" "+str(lfpOut[j,ev,cry,i-k]))
+                        for k in range(3-i):
+                            outFile.write(" "+"0")
+                else:
+                    if j ==2:
+                        outFile.write("peakOut "+str(lfpOut[j,ev,cry,i])+" "+str(lfpOut[j,ev,cry,i-1]))
+                    else:
+                        outFile.write(str(nameAr[j])+" "+str(lfpOut[j,ev,cry,i])+" "+str(lfpOut[j,ev,cry,i-1])+" "+str(lfpOut[j,ev,cry,i-2])+" "+str(lfpOut[j,ev,cry,i-3]))
+
+                outFile.write("\n")
+
+outFile.close()
+
