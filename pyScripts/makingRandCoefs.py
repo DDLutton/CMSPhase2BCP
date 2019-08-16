@@ -707,7 +707,7 @@ if allPresent:
         hco = hex(co)[2:].zfill(6)
         tmpB = con2ndCo([int(hco[:2],16),int(hco[2],16),int(hco[3:],16)])
         tmpC = con3rdCo([int(hco[:2],16),int(hco[2],16),int(hco[3:],16)])
-        print(tmpB,tmpC)
+        #print(tmpB,tmpC)
         coeffAr[i] = [co,int('{0:08b}'.format(tmpB[0])+'{0:04b}'.format(tmpB[1])+'{0:012b}'.format(tmpB[2]),2),int('{0:08b}'.format(tmpC[0])+'{0:04b}'.format(tmpC[1])+'{0:012b}'.format(tmpC[2]),2)]
 else:
     for i in range(xLinks*NCrystalsPerLink):
@@ -748,12 +748,12 @@ else:
     if allPresent:
         outFile = open("{0}links{1}crystals_Gen_coeffArrays_Fixd_aP.txt".format(xLinks,NCrystalsPerLink),"w")
         outFile.write("C coeff:\n")
-        outFile.write("static const uint24_t coeff[300][3] = {{{{"+"0x"+hex(coeffAr[0][0])[2:].zfill(6)+", "+"0x"+hex(coeffAr[0][1])[2:].zfill(6)+", "+"0x"+hex(coeffAr[0][2])[2:].zfill(6)+"}")
+        outFile.write("static const uint24_t coeff[300][3] = {{"+"0x"+hex(coeffAr[0][0])[2:].zfill(6)+", "+"0x"+hex(coeffAr[0][1])[2:].zfill(6)+", "+"0x"+hex(coeffAr[0][2])[2:].zfill(6)+"}")
 
     else:
         outFile = open("{0}links{1}crystals_Gen_coeffArrays_Fixd.txt".format(xLinks,NCrystalsPerLink),"w")
         outFile.write("C coeff:\n")
-        outFile.write("static const uint24_t coeff[{0}][3] = {{{{".format(xLinks*NCrystalsPerLink)+hex(coeffAr[0][0])+", "+hex(coeffAr[0][1])+", "+hex(coeffAr[0][2])+"}")
+        outFile.write("static const uint24_t coeff[{0}][3] = {{".format(xLinks*NCrystalsPerLink)+hex(coeffAr[0][0])+", "+hex(coeffAr[0][1])+", "+hex(coeffAr[0][2])+"}")
     for ar in coeffAr[1:]:
         outFile.write(",\n{"+"0x"+hex(ar[0])[2:].zfill(6))
         for element in ar[1:]:
