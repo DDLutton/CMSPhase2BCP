@@ -211,6 +211,7 @@ for ev,evOut in zip(linkAr,linkOAr):
 
 outFile.write("\n")
 outFile.close()
+outFileTwo.close()
 
 outFile = open("{0}_{1}_{2}coeffAr.txt".format(inputName,filename,xLinks),"w")
 outFile.write("C coeff:\n")
