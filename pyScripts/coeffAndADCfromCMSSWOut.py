@@ -124,7 +124,7 @@ with open(filename) as inFile:
                     if int(lineAr[i])> 1023:
                         linkOAr[evtCtr-1,idDict[rawId],j] = 1023
                     else:
-                        linkOAr[evtCtr-1,idDict[rawId],j] = int(lineAr[i])
+                        linkOAr[evtCtr-1,idDict[rawId],j] = int(lineAr[i]) >> 2
             else:
                 for i in range(10):
                     if int(lineAr[i])> maxValAr[lfpIter]:
