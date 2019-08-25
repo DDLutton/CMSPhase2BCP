@@ -23,13 +23,37 @@ inputCheck = False
 #so long as they are the same otherwise
 ignoreJ = False
 
+#For multiple events adds a counter for that
+multipleEvents = True
+
 #Place files to check here:
+"""
 filenameOne = "test2_28links_AddedGain_out_ref.txt"
 filenameTwo = "outputs_dlutton_test2_65_inlined_28L11C_NewCo.txt"
+"""
+"""
+filenameOne = "test2_100Events_300Channels__2evts_28links_inptest.txt"
+filenameTwo = "test2_100Events_300Channels__2evts_28links_inp.txt"
+"""
+
+filenameOne = "test2_100Events_300Channels__8evts_28links_IAE_out_ref.txt"
+filenameTwo = "test2_100Events_300Channels__8evts_28links_IAE_FromTPG_out_ref.txt"
 
 #Stores three elements per difference: location, input from first file, input from second file
 difArray = []
 jPlusOne=0
+
+#Tells you which crystals the difference is on
+difCry = []
+
+if multipleEvents:
+    #Changes the j so that it's negative at the start if you have a fake initial Event
+    initEvent = True
+    if initEvent:
+        evtCtr = -2
+        jPlusOne = -10
+    else:
+        evtCtr = -1
 
 with open(filenameOne) as inFileOne, open(filenameTwo) as inFileTwo:
     
@@ -38,7 +62,6 @@ with open(filenameOne) as inFileOne, open(filenameTwo) as inFileTwo:
     for lineOne, lineTwo in zip(inFileOne, inFileTwo):
         lineArrayOne = re.split(r'[ \n]', lineOne)
         lineArrayTwo = re.split(r'[ \n]', lineTwo)
-        
         #First checks that the files are formatted similarly. They should all have the same length on each line
         if (len(lineArrayOne) != len(lineArrayTwo)):
             print (len(lineArrayOne))
@@ -63,44 +86,62 @@ with open(filenameOne) as inFileOne, open(filenameTwo) as inFileTwo:
         
         #Same as below, but only running over a fixed number of links
         if justFirst:
+            if multipleEvents:
+                print("not yet imp")
             #Min here is used because some of the first lines before input might be smaller than the linksToCheck
             for lnkPlusOne in range(min(linksToCheck+1,len(lineArrayOneNS))):
                 if ignoreJ and lnkPlusOne > 0:
                     if (lineArrayOneNS[lnkPlusOne][:-1] != lineArrayTwoNS[lnkPlusOne][:-1]):
                         if inputCheck or wrdCnt < 30:
                             print(lineArrayOneNS[0]+"   "+lineArrayTwoNS[0])
-                        difArray.append( str((jPlusOne,wrdCnt % 3,lnkPlusOne))+"    "+lineArrayOneNS[lnkPlusOne]+"    "+lineArrayTwoNS[lnkPlusOne] )
+                        difArray.append( str((jPlusOne-1,wrdCnt % 3,lnkPlusOne-1))+"    "+lineArrayOneNS[lnkPlusOne]+"    "+lineArrayTwoNS[lnkPlusOne] )
                 elif (lineArrayOneNS[lnkPlusOne] != lineArrayTwoNS[lnkPlusOne]):
                         if inputCheck or wrdCnt < 30:
                             print(lineArrayOneNS[0]+"   "+lineArrayTwoNS[0])
-                        difArray.append( str((jPlusOne,wrdCnt % 3,lnkPlusOne))+"    "+lineArrayOneNS[lnkPlusOne]+"    "+lineArrayTwoNS[lnkPlusOne] )
+                        difArray.append( str((jPlusOne-1,wrdCnt % 3,lnkPlusOne-1))+"    "+lineArrayOneNS[lnkPlusOne]+"    "+lineArrayTwoNS[lnkPlusOne] )
         
         #iterator is lnkPlusOne since it goes over the wordCount also
         else:
             for lnkPlusOne in range(len(lineArrayOneNS)):
-                
                 #Same as below just ignores the last character in each input
                 if ignoreJ and lnkPlusOne > 0:
+                    if multipleEvents:
+                        print("not yet imp")
                     if (lineArrayOneNS[lnkPlusOne][:-1] != lineArrayTwoNS[lnkPlusOne][:-1]):
                         if inputCheck or wrdCnt < 30:
                             print(lineArrayOneNS[0]+"   "+lineArrayTwoNS[0])
-                        difArray.append( str((jPlusOne,wrdCnt % 3,lnkPlusOne))+"    "+lineArrayOneNS[lnkPlusOne]+"    "+lineArrayTwoNS[lnkPlusOne] )
+                        difArray.append( str((jPlusOne-1,wrdCnt % 3,lnkPlusOne-1))+"    "+lineArrayOneNS[lnkPlusOne]+"    "+lineArrayTwoNS[lnkPlusOne] )
                 
                 
-                if (lineArrayOneNS[lnkPlusOne] != lineArrayTwoNS[lnkPlusOne]):
-
+                elif (lineArrayOneNS[lnkPlusOne] != lineArrayTwoNS[lnkPlusOne]):
+                    difCry = []
                     #I put wrdCnt < 30 here just to limit the amount of console output from running the program
                     #Don't remember why I made inputCheck skip this limit, but it's not important.
                     if inputCheck or wrdCnt < 30:
                         print(lineArrayOneNS[0]+"   "+lineArrayTwoNS[0])
-                    
-                    #Location is formatted as: (bunch crossing number so if there is a difference on the 1st line of input, jPlusOne=1;
+                    #Getting which specific crystals are dif:
+                    if lnkPlusOne == 0:
+                        difCry = ["wrdCnt"]
+                    else:
+                        if wrdCnt % 3 == 0:
+                            for i in range(3):
+                                if lineArrayOneNS[lnkPlusOne][10-(4*i):14-(4*i)] != lineArrayTwoNS[lnkPlusOne][10-(4*i):14-(4*i)]:
+                                    difCry.append(i)
+                        else:
+                            for i in range(4):
+                                if lineArrayOneNS[lnkPlusOne][14-(4*i):18-(4*i)] != lineArrayTwoNS[lnkPlusOne][14-(4*i):18-(4*i)]:
+                                    difCry.append(3+i+(4*((wrdCnt % 3)-1)))
                     #then how far into the specific crossing the difference is so on the first part wrdCnt %3 = 0, 2nd it =1, etc;
-                    #Finally which link it's on, so if it's on link 00, lnkPlusOne = 1)
-                    difArray.append( str((jPlusOne,wrdCnt % 3,lnkPlusOne))+"    "+lineArrayOneNS[lnkPlusOne]+"    "+lineArrayTwoNS[lnkPlusOne] )
+                    #Finally which link it's on, so if it's on link 00, lnkPlusOne-1 = 0)
+                    if multipleEvents:
+                        difArray.append( str((evtCtr,jPlusOne-1,wrdCnt % 3,lnkPlusOne-1,difCry))+"       "+lineArrayOneNS[lnkPlusOne]+"       "+lineArrayTwoNS[lnkPlusOne] )
+                    else:
+                        difArray.append( str((jPlusOne-1,wrdCnt % 3,lnkPlusOne-1,difCry))+"       "+lineArrayOneNS[lnkPlusOne]+"       "+lineArrayTwoNS[lnkPlusOne] )
         wrdCnt+=1
         if (wrdCnt % 3 == 0):
-            jPlusOne+=1
+            jPlusOne += 1
+            if (jPlusOne-1) % 10 == 0 and multipleEvents:
+                evtCtr += 1
 fileString = "{0}_{1}_diff".format(filenameOne,filenameTwo)
 
 if inputCheck:
